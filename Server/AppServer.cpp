@@ -4,13 +4,15 @@
 #include "helpers/UtilFile.h"
 #include <string>
 #include <process.h>
+#include <windows.h>
 
-#include <fstream>
 
 bool Server::init(int port)
 {
     if(!m_socket.init(1000) || !m_socket.listen(port))
         return false;
+
+    CreateDirectory("resources", NULL);
 
     if(!fileWriteExclusive("resources\\CREATED", toStr(m_socket.port()) + "," + toStr(_getpid())))
         return false;
@@ -41,6 +43,7 @@ void Server::run()
         int n = client->recv(); // receive data from the connection, if any
         char* data = client->data();
         printf("-----RECV-----\n%s\n--------------\n", n > 0 ? data : "Error");
+        fflush(stdout);
         const std::vector<std::string>& tokens = split(data, " ");
         if(tokens.size() >= 2 && tokens[0] == "GET") // this is browser's request
         {

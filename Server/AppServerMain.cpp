@@ -10,5 +10,4 @@ int main (int argc, char *argv[])
         Sleep(1000);
     }
     s.run();
-    //Sleep(6000);
 }

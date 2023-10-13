@@ -19,8 +19,8 @@ bool Monitor::init()
 {
     m_console.handleCtrlC(Monitor::reset); // if Monitor's execution is aborted via Ctrl+C, reset() cleans up its internal state
     char cmd[256] = {};
-    sprintf(cmd, "Server.exe %s", sPort.c_str());
     remove("resources/CREATED");
+    sprintf(cmd, "Server.exe %s", sPort.c_str());
     bool ok = sServer.create(cmd); // launching Server
     printf(ok ? "monitoring \"%s\"\n" : "error: cannot monitor \"%s\"\n", cmd);
     return ok;
@@ -28,19 +28,16 @@ bool Monitor::init()
 
 bool Monitor::check()
 {
-    printf("PID of current server = %s\n", sServer.pid().c_str());
-    printf("FILENAME = %s\n", (std::string("resources/ALIVE") + sServer.pid()).c_str());
-    auto filename = (std::string("resources/ALIVE") + sServer.pid()).c_str();
-    if (fopen(filename, "rb") == NULL) {
-        return false;
-    }
+    const time_t timeout = 5;
+    auto filename = std::string("resources/ALIVE") + sServer.pid();
     struct stat result;
-    if (stat(filename, &result) == 0)
+    if (stat(filename.c_str(), &result) == 0)
     {
+        auto current_time = time(NULL);
         auto mod_time = result.st_mtime;
-        if (time(NULL) - mod_time > 5000)
+        if (current_time - mod_time > timeout)
         {
-            printf("Server isn't alive for more than %ld sec\n", 5000 / CLOCKS_PER_SEC);
+            printf("Server isn't alive for more than %ld sec\n", timeout);
             return false;
         }
     }
@@ -50,8 +47,11 @@ bool Monitor::check()
 
 void Monitor::reset()
 {
-    printf("PID of current server = %s\n", sServer.pid().c_str());
-    auto filename = (std::string("resources/ALIVE") + sServer.pid()).c_str();
-    remove(filename);
+    remove("resources/CREATED");
+    auto filename = std::string("resources/ALIVE") + sServer.pid();
+    if (remove(filename.c_str()) != 0)
+    {
+        printf("Can't remove file %s\n", filename.c_str());
+    }
     sServer.terminate();
 }

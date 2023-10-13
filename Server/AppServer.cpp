@@ -32,12 +32,14 @@ bool Server::init(int port)
 
 void Server::run()
 {
-    while(1)
+    while(true)
     {
         fileWriteStr(std::string("resources\\ALIVE") + toStr(_getpid()), ""); // pet the watchdog
         std::shared_ptr<Socket> client = m_socket.accept(); // accept incoming connection
-        if(!client->isValid())
+        if (!client->isValid())
+        {
             continue;
+        }
 
         int n = client->recv(); // receive data from the connection, if any
         char* data = client->data();

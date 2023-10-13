@@ -7,7 +7,6 @@ int main()
     m.init();
     while(true)
     {
-        Sleep(5000);
         if (!m.check())
         {
             printf("Reset server\n");

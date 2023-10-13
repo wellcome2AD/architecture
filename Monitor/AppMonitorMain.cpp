@@ -4,8 +4,19 @@
 int main()
 {
     Monitor m;
-    if(!m.init()) // in practice some sort of alarm should be raised here
-        return 0;
-    if(!m.check())
-        m.reset();
+    m.init();
+    while(true)
+    {
+        Sleep(5000);
+        if (!m.check())
+        {
+            printf("Reset server\n");
+            m.reset();
+            if (!m.init()) // in practice some sort of alarm should be raised here
+            {
+                printf("Can't initialize monitor\n");
+                return -1;
+            }
+        }
+    }    
 }

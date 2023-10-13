@@ -1,6 +1,9 @@
+#include <vector>
+#include <fstream>
+
 #include "Appclient.h"
 #include "helpers/UtilString.h"
-#include <vector>
+#include "helpers/UtilFile.h"
 
 int main (int argc, char *argv[])
 {

@@ -6,7 +6,6 @@
 #include <process.h>
 #include <windows.h>
 
-
 bool Server::init(int port)
 {
     if(!m_socket.init(1000) || !m_socket.listen(port))
@@ -33,12 +32,14 @@ bool Server::init(int port)
 
 void Server::run()
 {
-    while(1)
+    while(true)
     {
         fileWriteStr(std::string("resources\\ALIVE") + toStr(_getpid()), ""); // pet the watchdog
         std::shared_ptr<Socket> client = m_socket.accept(); // accept incoming connection
-        if(!client->isValid())
+        if (!client->isValid())
+        {
             continue;
+        }
 
         int n = client->recv(); // receive data from the connection, if any
         char* data = client->data();
@@ -52,7 +53,7 @@ void Server::run()
             if(filename == "\\")
             { // main entry point (e.g. http://localhost:12345/)
                 std::string payload = "";
-                for(auto s : m_data)
+                for(auto& s : m_data)
                     payload += (s+"<br>"); // collect all the feed and send it back to browser
                 client->sendStr("HTTP/1.1 200 OK\r\nContent-Type: text/html\r\nContent-Length: " + toStr(payload.length()) + "\r\n\r\n" + payload);
             }

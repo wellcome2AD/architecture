@@ -5,6 +5,8 @@
 #include <io.h>
 #include <sys/stat.h>
 #include <fcntl.h>
+#include <cstdlib>
+#include <ctime>
 //#include <dirent.h>
 
 inline static char* fileRead(const std::string& path, unsigned long long* fileSize = NULL, bool text = false)
@@ -80,11 +82,32 @@ inline static size_t fileWriteExclusive(const std::string& name, std::string str
     return result;
 }
 */
-bool fileExists(const std::string& path)
+inline bool fileExists(const std::string& path)
 {
     FILE* f = fopen(path.c_str(), "r");
     if(!f)
         return false;
     fclose(f);
     return true;
+}
+
+static std::string randomString(size_t size)
+{
+    std::string res(size, '0');
+    srand((unsigned int)time(0));
+    for (int i = 0; i < res.size(); i++) {
+        char b = 'a' + rand() % 26;
+        res[i] = b;
+    }
+    return res;
+}
+
+inline static std::string createUniqueFileName(const char* extension)
+{
+    std::string res = randomString(8);
+    while (fileExists(res + std::string(extension)))
+    {
+        res = randomString(8);
+    }
+    return res + std::string(extension);
 }

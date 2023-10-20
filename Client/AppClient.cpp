@@ -2,8 +2,8 @@
 
 #include "AppClient.h"
 #include "helpers/SocketClient.h"
-#include "helpers/UtilString.h"
-#include "helpers/UtilFile.h"
+#include "../helpers/UtilString.h"
+#include "../helpers/UtilFile.h"
 
 bool Client::send(const std::string& url, const std::string& msg)
 {

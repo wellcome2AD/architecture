@@ -2,8 +2,8 @@
 #include <fstream>
 
 #include "Appclient.h"
-#include "helpers/UtilString.h"
-#include "helpers/UtilFile.h"
+#include "../helpers/UtilString.h"
+#include "../helpers/UtilFile.h"
 
 int main(int argc, char* argv[])
 {	
@@ -53,17 +53,4 @@ int main(int argc, char* argv[])
 	
 	msg.insert(msg.begin(), format.begin(), format.end());
 	c.send(argv[1], msg);
-
-	/*const char* data = msg.c_str();
-	int n = msg.size();
-	
-	{
-		std::string format(data, std::find(data, data + n, ' '));
-		size_t index_of_ext_length = format.size() + 1;
-		size_t ext_length = *((size_t*)(&data[index_of_ext_length]));
-		size_t index_of_ext = index_of_ext_length + sizeof(size_t);
-		std::string ext(&data[index_of_ext], ext_length);
-		printf("%s %s\n", ext.c_str(), format.c_str());
-	}
-	*/
 }

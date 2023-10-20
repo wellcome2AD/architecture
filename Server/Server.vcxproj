@@ -127,17 +127,17 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\helpers\Socket.cpp" />
     <ClCompile Include="AppServer.cpp" />
     <ClCompile Include="AppServerMain.cpp" />
-    <ClCompile Include="helpers\Socket.cpp" />
     <ClCompile Include="helpers\SocketServer.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\helpers\Socket.h" />
+    <ClInclude Include="..\helpers\UtilFile.h" />
+    <ClInclude Include="..\helpers\UtilString.h" />
     <ClInclude Include="AppServer.h" />
-    <ClInclude Include="helpers\Socket.h" />
     <ClInclude Include="helpers\SocketServer.h" />
-    <ClInclude Include="helpers\UtilFile.h" />
-    <ClInclude Include="helpers\UtilString.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

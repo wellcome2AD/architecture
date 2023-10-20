@@ -6,8 +6,8 @@
 #include <fstream>
 
 #include "AppServer.h"
-#include "helpers/UtilString.h"
-#include "helpers/UtilFile.h"
+#include "../helpers/UtilString.h"
+#include "../helpers/UtilFile.h"
 
 bool Server::init(int port)
 {

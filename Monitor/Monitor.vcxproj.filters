@@ -1,18 +1,21 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="AppServer.cpp" />
-    <ClCompile Include="AppServerMain.cpp" />
-    <ClCompile Include="..\helpers\Socket.cpp">
+    <ClCompile Include="AppMonitor.cpp" />
+    <ClCompile Include="AppMonitorMain.cpp" />
+    <ClCompile Include="helpers\Console.cpp">
       <Filter>helpers</Filter>
     </ClCompile>
-    <ClCompile Include="helpers\SocketServer.cpp">
+    <ClCompile Include="helpers\Process.cpp">
       <Filter>helpers</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="AppServer.h" />
-    <ClInclude Include="..\helpers\Socket.h">
+    <ClInclude Include="AppMonitor.h" />
+    <ClInclude Include="helpers\Console.h">
+      <Filter>helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="helpers\Process.h">
       <Filter>helpers</Filter>
     </ClInclude>
     <ClInclude Include="..\helpers\UtilFile.h">
@@ -21,13 +24,10 @@
     <ClInclude Include="..\helpers\UtilString.h">
       <Filter>helpers</Filter>
     </ClInclude>
-    <ClInclude Include="helpers\SocketServer.h">
-      <Filter>helpers</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="helpers">
-      <UniqueIdentifier>{422afd41-4cc8-4b92-9f61-6c7f28aaa884}</UniqueIdentifier>
+      <UniqueIdentifier>{e26fcb79-3aed-42cb-b998-deebcc9d7c1c}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

@@ -9,8 +9,8 @@
 #include <string>
 #include "AppMonitor.h"
 #include "helpers/Process.h"
-#include "helpers/UtilString.h"
-#include "helpers/UtilFile.h"
+#include "../helpers/UtilString.h"
+#include "../helpers/UtilFile.h"
 
 static Process sServer;
 static std::string sPort = "0";
@@ -37,7 +37,7 @@ bool Monitor::check()
         auto mod_time = result.st_mtime;
         if (current_time - mod_time > timeout)
         {
-            printf("Server isn't alive for more than %ld sec\n", timeout);
+            printf("Server isn't alive for more than %lld sec\n", timeout);
             return false;
         }
     }

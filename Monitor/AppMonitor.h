@@ -6,7 +6,7 @@ class Monitor
 {
 public:
     Monitor() = default;
-    virtual ~Monitor() = default;
+    virtual ~Monitor();
     bool init(); // launches Server
     bool check(); // checks Server state
     static void reset(); // terminates irresponsive Server

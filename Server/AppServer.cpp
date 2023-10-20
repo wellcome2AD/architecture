@@ -16,8 +16,7 @@ bool Server::init(int port)
 
 	CreateDirectory("resources", NULL);
 
-	if (!fileWriteExclusive("resources\\CREATED", toStr(m_socket.port()) + "," + toStr(_getpid())))
-		return false;
+	fileWriteExclusive("resources\\CREATED", toStr(m_socket.port()) + "," + toStr(_getpid()));
 
 	printf("server started: port %d, pid %d\n", m_socket.port(), _getpid());
 

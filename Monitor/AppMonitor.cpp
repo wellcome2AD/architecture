@@ -2,11 +2,11 @@
 
 #include <sys/types.h>
 #include <sys/stat.h>
-
 #include <time.h>
-
 #include <vector>
 #include <string>
+#include <fstream>
+
 #include "AppMonitor.h"
 #include "helpers/Process.h"
 #include "../helpers/UtilString.h"
@@ -15,10 +15,22 @@
 static Process sServer;
 static std::string sPort = "0";
 
+Monitor::~Monitor()
+{
+    remove("resources/CREATED");
+}
+
 bool Monitor::init()
 {
     m_console.handleCtrlC(Monitor::reset); // if Monitor's execution is aborted via Ctrl+C, reset() cleans up its internal state
     char cmd[256] = {};
+    std::ifstream created_file("resources/CREATED");
+    if (created_file.is_open())
+    {
+        std::string temp;
+        getline(created_file, temp, ',');
+        sPort = temp;
+    }
     remove("resources/CREATED");
     sprintf(cmd, "Server.exe %s", sPort.c_str());
     bool ok = sServer.create(cmd); // launching Server
@@ -47,7 +59,6 @@ bool Monitor::check()
 
 void Monitor::reset()
 {
-    remove("resources/CREATED");
     auto filename = std::string("resources/ALIVE") + sServer.pid();
     if (remove(filename.c_str()) != 0)
     {

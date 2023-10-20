@@ -5,25 +5,38 @@
 #include <io.h>
 #include <sys/stat.h>
 #include <fcntl.h>
-#include <cstdlib>
-#include <ctime>
-//#include <dirent.h>
+#include <direct.h>
+#include <time.h>
+#include <stdlib.h>
+
+inline void makePath(std::string path)
+{
+    if (path == "")
+        return;
+    size_t start = 0, end = 0;
+    do
+    {
+        end = path.find("\\", start);
+        _mkdir(end != std::string::npos ? path.substr(0, end + 1).c_str() : path.c_str());
+        start = end + 1;
+    } while (end != std::string::npos);
+}
 
 inline static char* fileRead(const std::string& path, unsigned long long* fileSize = NULL, bool text = false)
 {
-    FILE* file = fopen( path.c_str(), "rb" );
-    if(!file)
+    FILE* file = fopen(path.c_str(), "rb");
+    if (!file)
         return NULL;
 
     fseek(file, 0, SEEK_END);
     size_t bufLen = ftell(file);
-    if(fileSize)
+    if (fileSize)
         *fileSize = bufLen;
-    rewind( file );
+    rewind(file);
 
     char* buffer = new char[bufLen + (text ? 1 : 0)];
     size_t last = fread(buffer, 1, bufLen, file);
-    if(text)
+    if (text)
         buffer[last] = 0;
 
     fclose(file);
@@ -37,12 +50,19 @@ inline static char* fileReadStr(const std::string& path)
 
 inline static int fileWrite(const std::string& name, const char* bulk, int len, bool append = false, bool exclusive = false)
 {
+    size_t pos = name.rfind("\\");
+    if (pos != std::string::npos)
+        makePath(name.substr(0, pos));
+
     FILE* f = NULL;
-    if(append)
+    if (append)
         f = fopen(name.c_str(), "ab");
     else
-        f = _fdopen(_open(name.c_str(), (exclusive ? _O_EXCL : 0) | _O_WRONLY | _O_CREAT | _O_TRUNC | _O_BINARY, _S_IREAD | _S_IWRITE), "wb");
-    if(!f)
+    {
+        int fd = _open(name.c_str(), (exclusive ? _O_EXCL : 0) | _O_WRONLY | _O_CREAT | _O_TRUNC | _O_BINARY, _S_IREAD | _S_IWRITE);
+        f = fd == -1 ? NULL : _fdopen(fd, "wb");
+    }
+    if (!f)
         return 0;
 
     int result = fwrite(bulk, 1, len, f);
@@ -85,11 +105,12 @@ inline static int fileWriteExclusive(const std::string& name, std::string str)
 inline bool fileExists(const std::string& path)
 {
     FILE* f = fopen(path.c_str(), "r");
-    if(!f)
+    if (!f)
         return false;
     fclose(f);
     return true;
 }
+
 
 static std::string randomString(size_t size)
 {

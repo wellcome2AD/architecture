@@ -5,11 +5,13 @@
 class Monitor
 {
 public:
-    Monitor() = default;
+    Monitor();
     virtual ~Monitor();
-    bool init(); // launches Server
-    bool check(); // checks Server state
-    static void reset(); // terminates irresponsive Server
+    bool init();
+    bool init(const std::vector<bool>& processes_live); // launches Server
+    std::vector<bool> check(); // checks Server state
+    static void reset(const std::vector<bool>& processes_live); // terminates irresponsive Server
+    static void reset();
 
 private:
     Console m_console;

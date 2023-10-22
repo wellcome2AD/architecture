@@ -11,25 +11,26 @@
 
 bool Server::init(int port)
 {
-	if (!m_socket.init(1000) || !m_socket.listen(port))
-		return false;
-
-	CreateDirectory("resources", NULL);
-
-	fileWriteExclusive("resources\\CREATED", toStr(m_socket.port()) + "," + toStr(_getpid()));
-
-	printf("server started: port %d, pid %d\n", m_socket.port(), _getpid());
-
-	char* state = fileReadStr("resources\\STATE"); // load state from previous run
-	if (state)
+	if (!m_socket.init(1000))
 	{
-		for (std::string& line : split(state, "\n"))
-			if (!line.empty())
-				m_data.push_back(line);
-		delete[] state;
+		return false;
 	}
 
-	return true;
+	bool result = false;
+	if (result = m_socket.listen(port))
+	{
+		CreateDirectory("resources", NULL);
+		fileWriteExclusive("resources\\CREATED", toStr(m_socket.port()) + "," + toStr(_getpid()));
+		printf("server started: port %d, pid %d\n", m_socket.port(), _getpid());
+		synchState();
+	}
+	else if(time(NULL) - last_synch_time >= 10)
+	{
+		last_synch_time = time(NULL);
+		synchState();		
+	}
+
+	return result;
 }
 
 void Server::run()
@@ -138,5 +139,32 @@ void Server::run()
 				}
 			}
 		}
+	}
+}
+
+void Server::synchState()
+{
+	auto state_file = fopen("resources\\STATE", "r");
+	if (state_file)
+	{
+		fseek(state_file, offset, SEEK_SET);
+		std::vector<char> data;
+		while (!feof(state_file))
+		{
+			data.push_back(fgetc(state_file));
+		}
+		if (!data.empty())
+		{
+			data.pop_back();
+		}
+		offset += data.size();
+		for (std::string& line : split(data.data(), "\n"))
+		{
+			if (!line.empty())
+			{
+				m_data.push_back(line);
+			}
+		}
+		fclose(state_file);
 	}
 }

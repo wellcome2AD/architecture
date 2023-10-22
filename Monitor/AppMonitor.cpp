@@ -12,57 +12,116 @@
 #include "../helpers/UtilString.h"
 #include "../helpers/UtilFile.h"
 
-static Process sServer;
+static std::vector<Process> sServers(2);
 static std::string sPort = "0";
+
+Monitor::Monitor()
+{
+    remove("resources/CREATED");
+    m_console.handleCtrlC(Monitor::reset); // if Monitor's execution is aborted via Ctrl+C, reset() cleans up its internal state
+}
 
 Monitor::~Monitor()
 {
     remove("resources/CREATED");
 }
 
+static void synchPort()
+{
+    while (!fileExists("resources/CREATED"))
+    {
+        Sleep(1000);
+    }
+    auto data = fileReadStr("resources/CREATED");
+    sPort = split(data, ",")[0];
+    delete[] data;
+}
+
 bool Monitor::init()
 {
-    m_console.handleCtrlC(Monitor::reset); // if Monitor's execution is aborted via Ctrl+C, reset() cleans up its internal state
+    auto processes_live = std::vector<bool>(sServers.size(), false);
+    
     char cmd[256] = {};
-    std::ifstream created_file("resources/CREATED");
-    if (created_file.is_open())
-    {
-        std::string temp;
-        getline(created_file, temp, ',');
-        sPort = temp;
-    }
-    remove("resources/CREATED");
     sprintf(cmd, "Server.exe %s", sPort.c_str());
-    bool ok = sServer.create(cmd); // launching Server
-    printf(ok ? "monitoring \"%s\"\n" : "error: cannot monitor \"%s\"\n", cmd);
+    
+    processes_live[0] = sServers[0].create(cmd);
+    
+    bool ok = processes_live[0];
+    if (ok)
+    {
+        ok = init(processes_live);
+    }    
     return ok;
 }
 
-bool Monitor::check()
+bool Monitor::init(const std::vector<bool>& processes_live)
 {
-    const time_t timeout = 5;
-    auto filename = std::string("resources/ALIVE") + sServer.pid();
-    struct stat result;
-    if (stat(filename.c_str(), &result) == 0)
-    {
-        auto current_time = time(NULL);
-        auto mod_time = result.st_mtime;
-        if (current_time - mod_time > timeout)
+    char cmd[256] = {};
+    synchPort();
+    sprintf(cmd, "Server.exe %s", sPort.c_str());
+
+    bool ok = true; // launching Server
+    for (size_t i = 0; i < sServers.size(); ++i)
+    {        
+        if (!processes_live[i])
+        {            
+            ok &= sServers[i].create(cmd);
+            if (ok)
+                printf("Server%s was started\n", sServers[i].pid().c_str());
+            else
+                printf("Cannot create server\n");
+        }
+        else
         {
-            printf("Server isn't alive for more than %lld sec\n", timeout);
-            return false;
+            printf("Server%s is continuing working\n", sServers[i].pid().c_str());
         }
     }
-    sServer.wait(3000);
-    return true;
+    return ok;
+}
+
+std::vector<bool> Monitor::check()
+{
+    const time_t timeout = 5;
+    std::vector<bool> res(sServers.size(), true);
+    for (size_t i = 0; i < sServers.size(); ++i)
+    {
+        auto& s = sServers[i];
+        auto filename = std::string("resources/ALIVE") + s.pid();
+        struct stat result;
+        if (stat(filename.c_str(), &result) == 0)
+        {
+            auto current_time = time(NULL);
+            auto mod_time = result.st_mtime;
+            if (current_time - mod_time > timeout)
+            {
+                printf("Server[%d] isn't alive for more than %lld sec\n", i, timeout);
+                res[i] = false;
+            }
+        }
+        s.wait(3000);
+    }
+    return res;
+}
+
+void Monitor::reset(const std::vector<bool>& processes_live)
+{
+    for (size_t i = 0; i < sServers.size(); ++i)
+    {
+        auto& s = sServers[i];
+        if (!processes_live[i])
+        {
+            printf("Reset server\n");
+            auto filename = std::string("resources/ALIVE") + s.pid();
+            if (remove(filename.c_str()) != 0)
+            {
+                printf("Can't remove file %s\n", filename.c_str());
+            }
+            s.terminate();
+        }
+    }
 }
 
 void Monitor::reset()
 {
-    auto filename = std::string("resources/ALIVE") + sServer.pid();
-    if (remove(filename.c_str()) != 0)
-    {
-        printf("Can't remove file %s\n", filename.c_str());
-    }
-    sServer.terminate();
+    reset(std::vector<bool>(sServers.size(), true));
 }

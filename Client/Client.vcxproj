@@ -140,6 +140,7 @@
     <ClInclude Include="..\helpers\Socket.h" />
     <ClInclude Include="..\helpers\UtilFile.h" />
     <ClInclude Include="..\helpers\UtilString.h" />
+    <ClInclude Include="..\Message\Message.h" />
     <ClInclude Include="AppClient.h" />
     <ClInclude Include="helpers\SocketClient.h" />
   </ItemGroup>

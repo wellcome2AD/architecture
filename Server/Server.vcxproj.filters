@@ -24,10 +24,16 @@
     <ClInclude Include="helpers\SocketServer.h">
       <Filter>helpers</Filter>
     </ClInclude>
+    <ClInclude Include="..\Message\Message.h">
+      <Filter>message</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="helpers">
       <UniqueIdentifier>{422afd41-4cc8-4b92-9f61-6c7f28aaa884}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="message">
+      <UniqueIdentifier>{18958177-8fa7-4b23-9b42-f35754e752e0}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

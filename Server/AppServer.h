@@ -17,6 +17,11 @@ public:
     void run(); // accept incoming connections, receive their data and send responses
 
 private:
+    void synchState(); // this method read unread data from file resources/STATE
+
+private:
     SocketServer m_socket; // server socket
+    time_t last_synch_time = 0;
+    long offset = 0;
     std::vector<std::string> m_data; // representation of uploaded data
 };

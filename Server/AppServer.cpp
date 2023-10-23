@@ -6,11 +6,13 @@
 #include <fstream>
 
 #include "AppServer.h"
+#include "../Message/Message.h"
 #include "../helpers/UtilString.h"
 #include "../helpers/UtilFile.h"
 
 bool Server::init(int port)
 {
+	fileWriteStr(std::string("resources\\ALIVE") + toStr(_getpid()), ""); // pet the watchdog
 	if (!m_socket.init(1000))
 	{
 		return false;
@@ -21,13 +23,22 @@ bool Server::init(int port)
 	{
 		CreateDirectory("resources", NULL);
 		fileWriteExclusive("resources\\CREATED", toStr(m_socket.port()) + "," + toStr(_getpid()));
-		printf("server started: port %d, pid %d\n", m_socket.port(), _getpid());
+		printf("server%d listen port %d\n", _getpid(), m_socket.port());
 		synchState();
 	}
 	else if(time(NULL) - last_synch_time >= 10)
 	{
 		last_synch_time = time(NULL);
 		synchState();		
+	}
+
+	if (users.size() == 0) 
+	{
+		loadUsers();
+	}
+	if (rights.size() == 0)
+	{
+		loadRights();
 	}
 
 	return result;
@@ -54,22 +65,23 @@ void Server::run()
 			continue;
 		}
 
-		std::string format(data, std::find(data, data + n, ' '));
-		if (format.find("GET") == std::string::npos) // if data is not a GET-request from browser
+		Message m = Message::Parse(data, n);
+		
+		if (m.format.find("GET") == std::string::npos) // if data is not a GET-request from browser
 		{
-			if (format.find("text") != std::string::npos) // if data is a text
-			{
-				printf("-----RECV-----\n%s\n--------------\n", data);
+			if (m.format.find("text") != std::string::npos) // if data is a text
+			{				
+				printf("-----RECV-----\n%s\n--------------\n", m.message.c_str());
 				fflush(stdout);
 				m_data.push_back(data); // store it in the feed
 			}
 			else
 			{
-				size_t index_of_ext_length = format.size() + 1;
+				size_t index_of_ext_length = m.format.size() + 1;
 				size_t ext_length = *((size_t*)(&data[index_of_ext_length]));
 				size_t index_of_ext = index_of_ext_length + sizeof(size_t);
 				std::string ext(&data[index_of_ext], ext_length);
-				printf("-----RECV-----\n%s %s\n--------------\n", ext.c_str(), format.c_str());
+				printf("-----RECV-----\n%s %s\n--------------\n", ext.c_str(), m.format.c_str());
 				fflush(stdout);
 				
 				std::string fileName = createUniqueFileName(ext.c_str());
@@ -167,4 +179,16 @@ void Server::synchState()
 		}
 		fclose(state_file);
 	}
+}
+
+void Server::loadUsers()
+{
+	// открыть файл USERS
+	// прочитать все данные в map, где ключ - первое слово в строке, значение - второе
+}
+
+void Server::loadRights()
+{
+	// открыть файл USERS
+	// прочитать все данные в map, где ключ - первое слово в строке, значение - второе
 }

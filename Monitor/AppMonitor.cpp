@@ -39,6 +39,7 @@ static void synchPort()
 
 bool Monitor::init()
 {
+    printf("---INITIALIZE---\n");
     auto processes_live = std::vector<bool>(sServers.size(), false);
     
     char cmd[256] = {};
@@ -50,7 +51,8 @@ bool Monitor::init()
     if (ok)
     {
         ok = init(processes_live);
-    }    
+    }
+    printf("----------------\n");
     return ok;
 }
 
@@ -83,6 +85,7 @@ std::vector<bool> Monitor::check()
 {
     const time_t timeout = 5;
     std::vector<bool> res(sServers.size(), true);
+    bool dead_proc_was_found = false;
     for (size_t i = 0; i < sServers.size(); ++i)
     {
         auto& s = sServers[i];
@@ -93,18 +96,35 @@ std::vector<bool> Monitor::check()
             auto current_time = time(NULL);
             auto mod_time = result.st_mtime;
             if (current_time - mod_time > timeout)
-            {
-                printf("Server[%d] isn't alive for more than %lld sec\n", i, timeout);
+            {                
+                dead_proc_was_found = true;
                 res[i] = false;
             }
         }
         s.wait(3000);
+    }
+    if (dead_proc_was_found)
+    {
+        printf("-----CHECK------\n");
+        for (size_t i = 0; i < sServers.size(); ++i)
+        {
+            if (res[i] == false)
+            {
+                printf("Server%s isn't alive for more than %lld sec\n", sServers[i].pid().c_str(), timeout);
+            }
+        }
+        printf("----------------\n");
     }
     return res;
 }
 
 void Monitor::reset(const std::vector<bool>& processes_live)
 {
+    bool dead_proc_was_found = std::find(processes_live.begin(), processes_live.end(), false) != processes_live.end();
+    if (dead_proc_was_found)
+    {
+        printf("-----RESET------\n");
+    }
     for (size_t i = 0; i < sServers.size(); ++i)
     {
         auto& s = sServers[i];
@@ -118,6 +138,10 @@ void Monitor::reset(const std::vector<bool>& processes_live)
             }
             s.terminate();
         }
+    }
+    if (dead_proc_was_found)
+    {
+        printf("----------------\n");
     }
 }
 

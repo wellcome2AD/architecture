@@ -16,7 +16,7 @@ bool SocketServer::listen(int port)
     local.sin_addr.s_addr = htonl(INADDR_ANY);
     if (bind(m_socket, (struct sockaddr *)&local, sizeof(local)) == -1)
     {
-        printf("bind error, port %d\n", m_port);
+        // printf("bind error, port %d\n", m_port);
         close();
         return false;
     }

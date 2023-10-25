@@ -17,7 +17,7 @@ int main()//(int argc, char* argv[])
 	}*/
 
 	int argc = 6;
-	char argv[][20] = {"Client.exe", "user", "1234", "192.168.1.1:12345", "Hello", "world!\n"};
+	char argv[][40] = {"Client.exe", "user", "1234", "192.168.1.1:12345", "D:/GithubFiles/Практика2/image.png\n"};
 
 	std::string user_name = argv[1], password = argv[2], address = argv[3];
 	std::string msg = argv[4];

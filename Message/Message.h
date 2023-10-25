@@ -10,7 +10,6 @@ class Message {
 public:
 	Message(const std::string& username, const std::string& password, const std::string& message)
 	{
-
 		// format of message with authorization and some file data is: 
 		// <size_t userNameLength><userName><size_t passwordLength><password>file <size_t length of extention><extention><file data>
 

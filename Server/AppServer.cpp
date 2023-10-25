@@ -144,7 +144,7 @@ void Server::loadUsers()
 
 void Server::loadRights()
 {
-	// открыть файл USERS
+	// открыть файл RIGHTS
 	// прочитать все данные в map, где ключ - первое слово в строке, значение - вектор из второго слова, расколотого на токены через запятые
 	auto rights_file = fopen("resources\\RIGHTS", "r");
 	if (rights_file)
@@ -180,7 +180,7 @@ void Server::loadRights()
 int Server::userExists(const std::string& userName, const std::string& password) const
 {
 	auto iter = users.find(userName);
-	int result = iter == users.end();
+	int result = iter == users.end() ? USER_DOESNT_EXIST : INCORRECT_PASSWORD;
 	if (result != USER_DOESNT_EXIST)
 	{
 		result = iter->second == password ? CORRECT_USER_AND_PASSWORD : INCORRECT_PASSWORD;

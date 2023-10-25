@@ -100,7 +100,8 @@ void Server::synchState()
 		{
 			if (!line.empty())
 			{
-				m_data.push_back(line);
+				auto temp = split(line, " "); // split by space on user and message
+				m_data.emplace(temp[0], temp[1]);
 			}
 		}
 		fclose(state_file);
@@ -201,6 +202,7 @@ void Server::handleMessage(const Message& m)
 		printf("User %s with password %s doesn't exist\n", m.username.c_str(), m.password.c_str());
 		return;
 	}
+	std::string data_to_store;
 	if (m.format.find("text") != std::string::npos) // if data is a text
 	{
 		if (!checkRights(m.username, "text"))
@@ -209,8 +211,8 @@ void Server::handleMessage(const Message& m)
 			return;
 		}
 		printf("-----RECV-----\n%s\n--------------\n\n", m.message.c_str());
-		fflush(stdout);
-		m_data.push_back(m.message); // store it in the feed
+		fflush(stdout);		
+		data_to_store = m.message;
 	}
 	else
 	{
@@ -227,14 +229,15 @@ void Server::handleMessage(const Message& m)
 		if (file.is_open())
 		{
 			std::copy(m.message.begin(), m.message.end(), std::ostreambuf_iterator<char>(file));
-			m_data.push_back(fileName); // store it in the feed
+			data_to_store = fileName;
 		}
 		else
 		{
 			printf("Can't open file %s\n", ("resources/" + fileName).c_str());
 		}
 	}
-	fileAppend("resources\\STATE", m_data.back() + "\n"); // store it in the file for subsequent runs
+	m_data.emplace(m.username, data_to_store); // store it in the feed
+	fileAppend("resources\\STATE", m.username + " " + data_to_store + "\r\n"); // store it in the file for subsequent runs
 }
 
 std::string Server::handleRequest(const std::vector<std::string>& tokens)
@@ -254,15 +257,15 @@ std::string Server::handleRequest(const std::vector<std::string>& tokens)
 			"<title>Server Content</title>" \
 			"</head>" \
 			"<body>\n";
-		for (auto& s : m_data)
+		for (auto&& [user, msg] : m_data)
 		{
-			if (fileExists("resources/" + s) && (endsWith(s, ".png") || endsWith(s, ".jpg")))
+			if (fileExists("resources/" + msg) && (endsWith(msg, ".png") || endsWith(msg, ".jpg")))
 			{
-				payload += "<p><img src=\"/" + s + "\"></p>\n";
+				payload += "<br><p>" + user + "<br><img src=\"/" + msg + "\"></p>\n";
 			}
 			else
 			{
-				payload += (s + "<br>"); // collect all the feed and send it back to browser
+				payload += (user + " " + msg + "<br>"); // collect all the feed and send it back to browser
 			}
 		}
 		std::string end = "</body>\n</html>";

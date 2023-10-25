@@ -9,6 +9,24 @@
     <ClCompile Include="helpers\SocketServer.cpp">
       <Filter>helpers</Filter>
     </ClCompile>
+    <ClCompile Include="..\Reader\SocketReader.cpp">
+      <Filter>reader</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Writer\SocketWriter.cpp">
+      <Filter>writer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Message\FileMessage.cpp">
+      <Filter>message</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Message\TextMessage.cpp">
+      <Filter>message</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Message\AuthorizedMessage.cpp">
+      <Filter>message</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Message\RequestMessage.cpp">
+      <Filter>message</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AppServer.h" />
@@ -24,7 +42,31 @@
     <ClInclude Include="helpers\SocketServer.h">
       <Filter>helpers</Filter>
     </ClInclude>
-    <ClInclude Include="..\Message\Message.h">
+    <ClInclude Include="..\Reader\Reader.h">
+      <Filter>reader</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Reader\SocketReader.h">
+      <Filter>reader</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Writer\SocketWriter.h">
+      <Filter>writer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Writer\Writer.h">
+      <Filter>writer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Message\FileMessage.h">
+      <Filter>message</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Message\TextMessage.h">
+      <Filter>message</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Message\IMessage.h">
+      <Filter>message</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Message\AuthorizedMessage.h">
+      <Filter>message</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Message\RequestMessage.h">
       <Filter>message</Filter>
     </ClInclude>
   </ItemGroup>
@@ -32,8 +74,14 @@
     <Filter Include="helpers">
       <UniqueIdentifier>{422afd41-4cc8-4b92-9f61-6c7f28aaa884}</UniqueIdentifier>
     </Filter>
+    <Filter Include="reader">
+      <UniqueIdentifier>{3501b131-8490-4d8a-8314-ce2aee99df91}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="writer">
+      <UniqueIdentifier>{1e2afe99-1716-4eec-b261-b5cdf0675839}</UniqueIdentifier>
+    </Filter>
     <Filter Include="message">
-      <UniqueIdentifier>{18958177-8fa7-4b23-9b42-f35754e752e0}</UniqueIdentifier>
+      <UniqueIdentifier>{b53c1bc5-56e3-4f8a-8a84-766f53a00b4b}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

@@ -9,8 +9,12 @@
 #include <algorithm>
 
 #include "AppServer.h"
+#include "../Reader/Reader.h"
 #include "../helpers/UtilString.h"
 #include "../helpers/UtilFile.h"
+#include "../Message/IMessage.h"
+#include "../Message/FileMessage.h"
+#include "../Message/RequestMessage.h"
 
 bool Server::init(int port)
 {
@@ -28,13 +32,13 @@ bool Server::init(int port)
 		printf("server%d listen port %d\n", _getpid(), m_socket.port());
 		synchState();
 	}
-	else if(time(NULL) - last_synch_time >= 10)
+	else if (time(NULL) - last_synch_time >= 10)
 	{
 		last_synch_time = time(NULL);
-		synchState();		
+		synchState();
 	}
 
-	if (users.size() == 0) 
+	if (users.size() == 0)
 	{
 		loadUsers();
 	}
@@ -58,25 +62,15 @@ void Server::run()
 			continue;
 		}
 
-		int n = client->recv(); // receive data from the connection, if any
-		char* data = client->data();
-
-		if (n <= 0)
+		Reader r(&*client);
+		IMessage* msg = nullptr;
+		r >> msg;
+		auto response = handleMessage(msg);
+		if (response.size() != 0) 
 		{
-			printf("-----RECV-----\n%s\n--------------\n\n", "Error");
-			continue;
+			client->sendStr(response);
 		}
-
-		const std::vector<std::string>& tokens = split(data, " ");
-		if (tokens[0] == "GET")
-		{
-			client->sendStr(handleRequest(tokens));
-		}
-		else
-		{
-			Message m = Message::Parse(data, n);
-			handleMessage(m);
-		}
+		client->close();
 	}
 }
 
@@ -189,65 +183,80 @@ int Server::userExists(const std::string& userName, const std::string& password)
 	return result;
 }
 
-bool Server::checkRights(const std::string& userName, const std::string& msgType) const
+bool Server::checkRights(const std::string& userName, format msgType) const
 {
 	auto iter = rights.find(userName);
-	bool user_has_right = iter != rights.end() && std::find(iter->second.begin(), iter->second.end(), msgType) != iter->second.end();
+	auto find_res = std::find(iter->second.begin(), iter->second.end(), toString(msgType));
+	bool user_has_right = iter != rights.end() && find_res != iter->second.end();
 	return user_has_right;
 }
 
-void Server::handleMessage(const Message& m)
+std::string Server::handleMessage(IMessage* m)
 {
-	if (userExists(m.username, m.password) != 2) {
-		printf("User %s with password %s doesn't exist\n", m.username.c_str(), m.password.c_str());
+	std::string response;
+	if (m == nullptr)
+	{
+		return response;
+	}
+	
+	if (m->GetFormat() == getReq)
+	{
+		response = handleRequest(dynamic_cast<RequestMessage*>(m));		
+	}
+	else
+		handleAuthorizedMessage(dynamic_cast<AuthorizedMessage*>(m));
+	return response;
+}
+
+void Server::handleAuthorizedMessage(AuthorizedMessage* m)
+{
+	if (userExists(m->GetUsername(), m->GetPassword()) != 2) {
+		printf("User %s with password %s doesn't exist\n", m->GetUsername().c_str(), m->GetPassword().c_str());
+		return;
+	}
+	if (!checkRights(m->GetUsername(), m->GetFormat()))
+	{
+		printf("User %s can't send %s messages\n", m->GetUsername().c_str(), toString(m->GetFormat()).c_str());
 		return;
 	}
 	std::string data_to_store;
-	if (m.format.find("text") != std::string::npos) // if data is a text
+	switch (m->GetFormat()) {
+	case text:
 	{
-		if (!checkRights(m.username, "text"))
-		{
-			printf("User %s can't send text messages\n", m.username.c_str());
-			return;
-		}
-		printf("-----RECV-----\n%s\n--------------\n\n", m.message.c_str());
-		fflush(stdout);		
-		data_to_store = m.message;
+		data_to_store = m->GetMsg();
+		break;
 	}
-	else
+	case file:
 	{
-		if (!checkRights(m.username, "file"))
-		{
-			printf("User %s can't send file\n", m.username.c_str());
-			return;
-		}		
-		printf("-----RECV-----\n%s %s\n--------------\n\n", m.file_ext.c_str(), m.format.c_str());
-		fflush(stdout);
-
-		std::string fileName = createUniqueFileName(m.file_ext.c_str());
-		std::ofstream file("resources/" + fileName, std::ios::binary);		
+		std::string fileName = createUniqueFileName((dynamic_cast<FileMessage*>(m))->GetExtension().c_str());
+		std::ofstream file("resources/" + fileName, std::ios::binary);
 		if (file.is_open())
 		{
-			std::copy(m.message.begin(), m.message.end(), std::ostreambuf_iterator<char>(file));
+			auto temp = m->GetMsg();
+			std::copy(temp.begin(), temp.end(), std::ostreambuf_iterator<char>(file));
 			data_to_store = fileName;
 		}
 		else
 		{
 			printf("Can't open file %s\n", ("resources/" + fileName).c_str());
+			return;
 		}
+		break;
 	}
-	m_data.emplace(m.username, data_to_store); // store it in the feed
-	fileAppend("resources\\STATE", m.username + " " + data_to_store + "\r\n"); // store it in the file for subsequent runs
+	}
+	printf("-----RECV-----\n%s %s\n--------------\n\n", m->GetUsername().c_str(), data_to_store.c_str());
+	fflush(stdout);
+	m_data.emplace(m->GetUsername(), data_to_store); // store it in the feed
+	fileAppend("resources\\STATE", m->GetUsername() + " " + data_to_store + "\r\n"); // store it in the file for subsequent runs
 }
 
-std::string Server::handleRequest(const std::vector<std::string>& tokens)
+std::string Server::handleRequest(RequestMessage* m)
 {
 	std::string response;
 	auto endsWith = [](const std::string& fileName, const std::string& ext) {
 		return fileName.substr(fileName.size() - ext.size()) == ext;
 	};
-	// convert URL to file system path, e.g. request to img/1.png resource becomes request to .\img\1.png file in Server's directory tree
-	const std::string& filename = join(split(tokens[1], "/"), "\\");
+	auto&& filename = m->GetMsg();
 	if (filename == "\\")
 	{ // main entry point (e.g. http://localhost:12345/)
 		std::string payload = "<!DOCTYPE html>"\
@@ -261,11 +270,11 @@ std::string Server::handleRequest(const std::vector<std::string>& tokens)
 		{
 			if (fileExists("resources/" + msg) && (endsWith(msg, ".png") || endsWith(msg, ".jpg")))
 			{
-				payload += "<br><p>" + user + "<br><img src=\"/" + msg + "\"></p>\n";
+				payload += "<p>" + user + ":<br><img src=\"/" + msg + "\"></p>\n";
 			}
 			else
 			{
-				payload += (user + " " + msg + "<br>"); // collect all the feed and send it back to browser
+				payload += (user + ": " + msg + "<br>"); // collect all the feed and send it back to browser
 			}
 		}
 		std::string end = "</body>\n</html>";

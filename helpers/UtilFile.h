@@ -116,7 +116,6 @@ inline bool fileExists(const std::string& path)
 static std::string randomString(size_t size)
 {
     std::string res(size, '0');
-    srand((unsigned int)time(0));
     for (int i = 0; i < res.size(); i++) {
         char b = 'a' + rand() % 26;
         res[i] = b;
@@ -126,6 +125,7 @@ static std::string randomString(size_t size)
 
 inline static std::string createUniqueFileName(const char* extension)
 {
+    srand((unsigned int)time(0));
     std::string res = randomString(8);
     while (fileExists(res + std::string(extension)))
     {

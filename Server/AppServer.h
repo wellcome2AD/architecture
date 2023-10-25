@@ -26,7 +26,7 @@ private:
     void loadRights();
     int userExists(const std::string& userName, const std::string& password) const;
     bool checkRights(const std::string& userName, format msgType) const;
-    void handleMessage(IMessage* m);
+    std::string handleMessage(IMessage* m);
     void handleAuthorizedMessage(AuthorizedMessage* m);
     std::string handleRequest(RequestMessage* tokens);
 

@@ -10,3 +10,5 @@ std::string RequestMessage::GetMsg() const { return _message; }
 void RequestMessage::SetMsg(const std::string& m) { _message = m; }
 
 void RequestMessage::Read(Reader* r) {}
+
+void RequestMessage::Write(Writer* w) const {}

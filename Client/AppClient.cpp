@@ -2,10 +2,11 @@
 
 #include "AppClient.h"
 #include "helpers/SocketClient.h"
+#include "../Writer/Writer.h"
 #include "../helpers/UtilString.h"
 #include "../helpers/UtilFile.h"
 
-bool Client::send(const std::string& url, const std::string& msg)
+bool Client::send(const std::string& url, const AuthorizedMessage* msg)
 {
     SocketClient s;
     static constexpr int timeout = 60;
@@ -24,10 +25,11 @@ bool Client::send(const std::string& url, const std::string& msg)
     }
 
     if (succes_connect)
-    {
-        printf("sending text message \"%s\"\n", msg.c_str());
-        len = s.sendStr(msg);
-        printf("sent %d bytes\n", len);
+    {        
+        Writer* w = new Writer(&s);
+        *w << msg;
+        printf("data format %s, ", toString(msg->GetFormat()).c_str());
+        printf("data size %zd\n", msg->GetMsg().size());
     }
     else
     {

@@ -1,5 +1,6 @@
 #include "FileMessage.h"
 #include "../Reader/Reader.h"
+#include "../Writer/Writer.h"
 
 FileMessage::FileMessage(const std::string& username, const std::string& password, const std::string& extension, const std::string& message)
 	:
@@ -9,10 +10,13 @@ FileMessage::FileMessage(const std::string& username, const std::string& passwor
 
 void FileMessage::Read(Reader* r)
 {
-	*r >> _username;
-	*r >> _password;
-	*r >> _extension;
-	*r >> _message;
+	*r >> _username >> _password >> _extension >> _message;
+}
+
+void FileMessage::Write(Writer* w) const
+{
+
+	*w << _username << _password << _extension << _message << my_endl();
 }
 
 format FileMessage::GetFormat() const { return file; }

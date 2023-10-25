@@ -8,6 +8,7 @@ public:
 	FileMessage(const std::string& username, const std::string& password, const std::string& extension, const std::string& message);
 	
 	virtual void Read(Reader*) override;
+	virtual void Write(Writer* w) const override;
 	virtual format GetFormat() const override;
 
 	std::string GetExtension() const;

@@ -5,6 +5,7 @@
 #define SIZE_OF_FORMAT 4
 
 class Reader;
+class Writer;
 
 enum format {
 	text, file, getReq
@@ -38,4 +39,5 @@ public:
 	virtual std::string GetMsg() const = 0;
 	virtual void SetMsg(const std::string& m) = 0;
 	virtual void Read(Reader* r) = 0;
+	virtual void Write(Writer* w) const = 0;
 };

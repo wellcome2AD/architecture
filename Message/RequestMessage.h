@@ -11,6 +11,7 @@ public:
 	virtual std::string GetMsg() const override;
 	virtual void SetMsg(const std::string&) override;
 	virtual void Read(Reader* r) override;
+	virtual void Write(Writer* w) const override;
 private:
 	std::string _message;
 };

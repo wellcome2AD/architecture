@@ -7,8 +7,9 @@
 #include "../Message/TextMessage.h"
 #include "../Message/FileMessage.h"
 #include "../Message/RequestMessage.h"
+#include "../helpers/UtilString.h"
 
-typedef size_t FIELDS_TYPE;
+typedef size_t MSG_FIELD_SIZE_TYPE;
 
 class Reader
 {
@@ -20,21 +21,21 @@ private:
 public:
 	Reader(Socket *s) : _socket(s), _offset(0), _count(0) {}
 
-	Reader& operator>>(FIELDS_TYPE& size)
+	Reader& operator>>(MSG_FIELD_SIZE_TYPE& size)
 	{
-		char data[sizeof(FIELDS_TYPE)];
-		for (size_t i = 0; i < sizeof(FIELDS_TYPE); ++i)
+		char data[sizeof(MSG_FIELD_SIZE_TYPE)];
+		for (size_t i = 0; i < sizeof(MSG_FIELD_SIZE_TYPE); ++i)
 		{
 			data[i] = getchar();
 		}
-		size = *(FIELDS_TYPE*)(data);
+		size = *((MSG_FIELD_SIZE_TYPE*)data);
 
 		return *this;
 	}
 
 	Reader& operator>>(std::string& str)
 	{
-		FIELDS_TYPE size;
+		MSG_FIELD_SIZE_TYPE size;
 		*this >> size;
 
 		for (size_t i = 0; i < size; ++i)
@@ -48,10 +49,9 @@ public:
 	Reader& operator>>(IMessage*& m)
 	{
 		std::string type;
-		char c = getchar();
-		for(size_t i = 0; i < SIZE_OF_FORMAT; ++i, c = getchar())
+		for(size_t i = 0; i < SIZE_OF_FORMAT; ++i)
 		{
-			type.push_back(c);
+			type.push_back(getchar());
 		}
 		if (type.find("text") != std::string::npos)
 		{
@@ -66,10 +66,12 @@ public:
 			char c;
 			std::vector<char> message;
 			while ((c = getchar()) != ' ')
-			{
+			{				
 				message.push_back(c);
 			}
-			m = new RequestMessage(std::string(message.data()));
+			message.push_back('\0');
+			const std::string& filename = join(split(std::string(message.data()), "/"), "\\");
+			m = new RequestMessage(filename);
 		}
 
 		if (m)
@@ -85,10 +87,15 @@ private:
 	{
 		//вызываем _socket->recv() и после этого меняем поля _count, _offset.
 		_count = _socket->recv();
+		_offset = 0;
 	}
 
 	char getchar()
 	{
+		if (_count == 0)
+		{
+			recv();
+		}
 		char res = _socket->data()[_offset];
 		++_offset;
 		if (_offset == _count)

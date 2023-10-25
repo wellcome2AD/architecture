@@ -65,7 +65,12 @@ void Server::run()
 		Reader r(&*client);
 		IMessage* msg = nullptr;
 		r >> msg;
-		handleMessage(msg);
+		auto response = handleMessage(msg);
+		if (response.size() != 0) 
+		{
+			client->sendStr(response);
+		}
+		client->close();
 	}
 }
 
@@ -186,12 +191,21 @@ bool Server::checkRights(const std::string& userName, format msgType) const
 	return user_has_right;
 }
 
-void Server::handleMessage(IMessage* m)
+std::string Server::handleMessage(IMessage* m)
 {
+	std::string response;
+	if (m == nullptr)
+	{
+		return response;
+	}
+	
 	if (m->GetFormat() == getReq)
-		handleRequest(dynamic_cast<RequestMessage*>(m));
+	{
+		response = handleRequest(dynamic_cast<RequestMessage*>(m));		
+	}
 	else
 		handleAuthorizedMessage(dynamic_cast<AuthorizedMessage*>(m));
+	return response;
 }
 
 void Server::handleAuthorizedMessage(AuthorizedMessage* m)
@@ -256,11 +270,11 @@ std::string Server::handleRequest(RequestMessage* m)
 		{
 			if (fileExists("resources/" + msg) && (endsWith(msg, ".png") || endsWith(msg, ".jpg")))
 			{
-				payload += "<br><p>" + user + "<br><img src=\"/" + msg + "\"></p>\n";
+				payload += "<p>" + user + ":<br><img src=\"/" + msg + "\"></p>\n";
 			}
 			else
 			{
-				payload += (user + " " + msg + "<br>"); // collect all the feed and send it back to browser
+				payload += (user + ": " + msg + "<br>"); // collect all the feed and send it back to browser
 			}
 		}
 		std::string end = "</body>\n</html>";

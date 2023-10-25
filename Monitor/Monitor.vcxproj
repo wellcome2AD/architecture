@@ -131,7 +131,6 @@
   <ItemGroup>
     <ClInclude Include="..\helpers\UtilFile.h" />
     <ClInclude Include="..\helpers\UtilString.h" />
-    <ClInclude Include="..\Message\Message.h" />
     <ClInclude Include="AppMonitor.h" />
     <ClInclude Include="helpers\Console.h" />
     <ClInclude Include="helpers\Process.h" />

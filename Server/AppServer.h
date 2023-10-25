@@ -7,7 +7,8 @@
 #include <memory>
 
 #include "helpers/SocketServer.h"
-#include "../Message/Message.h"
+#include "../Message/AuthorizedMessage.h"
+#include "../Message/RequestMessage.h"
 
 // Server that accepts connections from Clients and Viewers.
 // Clients can upload text and images to Server.
@@ -24,9 +25,10 @@ private:
     void loadUsers();
     void loadRights();
     int userExists(const std::string& userName, const std::string& password) const;
-    bool checkRights(const std::string& userName, const std::string& msgType) const;
-    void handleMessage(const Message& m);
-    std::string handleRequest(const std::vector<std::string>& tokens);
+    bool checkRights(const std::string& userName, format msgType) const;
+    void handleMessage(IMessage* m);
+    void handleAuthorizedMessage(AuthorizedMessage* m);
+    std::string handleRequest(RequestMessage* tokens);
 
 private:
     SocketServer m_socket; // server socket

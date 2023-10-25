@@ -3,7 +3,8 @@
 #include <sstream>
 
 #include "Appclient.h"
-#include "../Message/Message.h"
+#include "../Message/AuthorizedMessage.h"
+#include "../Message/TextMessage.h"
 #include "../helpers/UtilString.h"
 #include "../helpers/UtilFile.h"
 
@@ -26,10 +27,11 @@ int main(int argc, char* argv[])
 		msg += std::string(" ") + argv[i];
 	}
 
-	Message msg_to_send(user_name, password, msg);	
+	// const std::string& filename = join(split(m->GetMessage(), "/"), "\\"); строка для Writer
+	TextMessage msg_to_send(user_name, password, msg);	
 	std::ostringstream str_stream;
 	str_stream << msg_to_send;
-	printf("%s ", msg_to_send.format.c_str());
-	printf("%zd", msg_to_send.message.size());
+	printf("%s ", toString(msg_to_send.GetFormat()).c_str());
+	printf("%zd\n", msg_to_send.GetMsg().size());
 	Client().send(address, str_stream.str());
 }

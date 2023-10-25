@@ -24,16 +24,10 @@
     <ClInclude Include="..\helpers\UtilString.h">
       <Filter>helpers</Filter>
     </ClInclude>
-    <ClInclude Include="..\Message\Message.h">
-      <Filter>message</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="helpers">
       <UniqueIdentifier>{e26fcb79-3aed-42cb-b998-deebcc9d7c1c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="message">
-      <UniqueIdentifier>{cf05a704-db54-4f32-ad0c-675d008e626a}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

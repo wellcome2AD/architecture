@@ -63,7 +63,7 @@ void Server::run()
 
 		if (n <= 0)
 		{
-			printf("-----RECV-----\n%s\n--------------\n", "Error");
+			printf("-----RECV-----\n%s\n--------------\n\n", "Error");
 			continue;
 		}
 
@@ -208,7 +208,7 @@ void Server::handleMessage(const Message& m)
 			printf("User %s can't send text messages\n", m.username.c_str());
 			return;
 		}
-		printf("-----RECV-----\n%s\n--------------\n", m.message.c_str());
+		printf("-----RECV-----\n%s\n--------------\n\n", m.message.c_str());
 		fflush(stdout);
 		m_data.push_back(m.message); // store it in the feed
 	}
@@ -218,17 +218,12 @@ void Server::handleMessage(const Message& m)
 		{
 			printf("User %s can't send file\n", m.username.c_str());
 			return;
-		}
-		size_t index_of_ext_length = m.format.find(" ") + 1;
-		size_t ext_length = *((size_t*)(&m.format[index_of_ext_length]));
-		size_t index_of_ext = index_of_ext_length + sizeof(size_t);
-		std::string ext(&m.format[index_of_ext], ext_length);
-		printf("-----RECV-----\n%s %s\n--------------\n", ext.c_str(), m.format.c_str());
+		}		
+		printf("-----RECV-----\n%s %s\n--------------\n\n", m.file_ext.c_str(), m.format.c_str());
 		fflush(stdout);
 
-		std::string fileName = createUniqueFileName(ext.c_str());
-		std::ofstream file("resources/" + fileName, std::ios::binary);
-		size_t begin_of_data = index_of_ext + ext_length;
+		std::string fileName = createUniqueFileName(m.file_ext.c_str());
+		std::ofstream file("resources/" + fileName, std::ios::binary);		
 		if (file.is_open())
 		{
 			std::copy(m.message.begin(), m.message.end(), std::ostreambuf_iterator<char>(file));
@@ -279,7 +274,6 @@ std::string Server::handleRequest(const std::vector<std::string>& tokens)
 		if (file.is_open())
 		{
 			std::string fileData(std::istreambuf_iterator<char>(file), {});
-			//client->sendStr("HTTP/1.1 200 OK\r\nContent-Type: image/png\r\nContent-Length: " + std::to_string(fileData.size()) + "\r\n\r\n" + fileData);
 			response = "HTTP/1.1 200 OK\r\nContent-Type: image/png\r\nContent-Length: " + std::to_string(fileData.size()) + "\r\n\r\n" + fileData;
 		}
 		else

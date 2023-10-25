@@ -46,7 +46,7 @@ int Socket::send(const char* msg, int len)
 {
     if(len <= 0)
         return 0;
-    printf("SEND\n----------\n%s\n----------\n", msg);
+    printf("SEND\n----------\n%s\n----------\n\n", msg);
     return ::send(m_socket, msg, len, 0);
 }
 

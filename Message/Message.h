@@ -1,5 +1,7 @@
 #pragma once
 
+#define SIZE_OF_FORMAT 4
+
 #include <string>
 #include <iostream>
 #include <fstream>
@@ -47,16 +49,24 @@ public:
 		result.password = std::string(&data[cur_index], password_len);
 		cur_index += password_len;
 
-		result.format = std::string(&data[cur_index], std::find(&data[cur_index], data + n, ' '));
+		result.format = std::string(&data[cur_index], SIZE_OF_FORMAT);
+		cur_index += result.format.size();
 
-		cur_index += result.format.size() + 1;
-		result.message = std::string(&data[cur_index]);
+		if (result.format.find("file") != std::string::npos)
+		{			
+			auto ext_len = *((size_t*)(&data[cur_index]));
+			cur_index += sizeof(size_t);
+			result.file_ext = std::string(&data[cur_index], ext_len);
+			cur_index += result.file_ext.size();
+		}
+
+		result.message = std::string(&data[cur_index], data + n);
 
 		return result;
 	}
 
 public:
-	std::string username, password, format, message;
+	std::string username, password, format, file_ext, message;
 
 private:
 	Message() = default;
@@ -68,11 +78,13 @@ private:
 			auto dot_befor_ext = msg.find_last_of('.');
 			auto extension = msg.substr(dot_befor_ext);
 			size_t ext_size = extension.size();
-			format = "file " + std::string((char*)(&ext_size), sizeof(size_t)) + extension;
+			format = "file";
+			file_ext = std::string((char*)(&ext_size), sizeof(size_t)) + extension;
 		}
 		else
 		{
-			format = "text ";
+			format = "text";
+			file_ext = std::string();
 		}
 		return format;
 	}
@@ -95,6 +107,11 @@ private:
 };
 
 inline std::ostream& operator<<(std::ostream& os, const Message& m) {
-	os << m.username << m.password << m.format << m.message;
+	os << m.username << m.password << m.format;
+	if (m.file_ext.size() != 0)
+	{
+		os << m.file_ext;
+	}
+	os << m.message;
 	return os;
 }

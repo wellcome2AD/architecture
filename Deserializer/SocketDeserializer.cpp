@@ -11,7 +11,6 @@ void SocketDeserializer::Recv()
 }
 
 char SocketDeserializer::GetChar()
-
 {
 	if (_count == 0)
 	{

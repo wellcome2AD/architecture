@@ -30,6 +30,12 @@
     <ClCompile Include="..\Deserializer\SocketDeserializer.cpp">
       <Filter>deserializer</Filter>
     </ClCompile>
+    <ClCompile Include="ResponseBuilder\ServerContent.cpp">
+      <Filter>response_builder</Filter>
+    </ClCompile>
+    <ClCompile Include="..\helpers\File.cpp">
+      <Filter>helpers</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AppServer.h" />
@@ -86,6 +92,9 @@
     </ClInclude>
     <ClInclude Include="..\Deserializer\SocketDeserializer.h">
       <Filter>deserializer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\helpers\File.h">
+      <Filter>helpers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

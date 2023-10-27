@@ -14,7 +14,7 @@ inline Deserializer& operator>>(Deserializer&  d, MSG_FIELD_SIZE_TYPE& size)
 	char data[sizeof(MSG_FIELD_SIZE_TYPE)];
 	for (size_t i = 0; i < sizeof(MSG_FIELD_SIZE_TYPE); ++i)
 	{
-		data[i] = getchar();
+		data[i] = d.GetChar();
 	}
 	size = *((MSG_FIELD_SIZE_TYPE*)data);
 
@@ -28,7 +28,7 @@ inline Deserializer& operator>>(Deserializer& d, std::string& str)
 
 	for (size_t i = 0; i < size; ++i)
 	{
-		str.push_back(getchar());
+		str.push_back(d.GetChar());
 	}
 
 	return d;
@@ -39,7 +39,7 @@ inline Deserializer& operator>>(Deserializer& d, IMessage*& m)
 	std::string type;
 	for (size_t i = 0; i < SIZE_OF_FORMAT; ++i)
 	{
-		type.push_back(getchar());
+		type.push_back(d.GetChar());
 	}
 	if (type.find("text") != std::string::npos)
 	{
@@ -53,7 +53,7 @@ inline Deserializer& operator>>(Deserializer& d, IMessage*& m)
 	{
 		char c;
 		std::vector<char> message;
-		while ((c = getchar()) != ' ')
+		while ((c = d.GetChar()) != ' ')
 		{
 			message.push_back(c);
 		}

@@ -27,6 +27,9 @@
     <ClCompile Include="..\Serializer\SocketSerializer.cpp">
       <Filter>serializer</Filter>
     </ClCompile>
+    <ClCompile Include="..\helpers\File.cpp">
+      <Filter>helpers</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AppClient.h" />
@@ -74,6 +77,9 @@
     </ClInclude>
     <ClInclude Include="..\Serializer\SocketSerializer.h">
       <Filter>serializer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\helpers\File.h">
+      <Filter>helpers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

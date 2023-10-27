@@ -16,6 +16,8 @@
 #include "../Message/IMessage.h"
 #include "../Message/FileMessage.h"
 #include "../Message/RequestMessage.h"
+#include "ResponseBuilder/ResponseBuilder.h"
+#include "../helpers/File.h"
 
 bool Server::init(int port)
 {
@@ -96,7 +98,7 @@ void Server::synchState()
 			if (!line.empty())
 			{
 				auto temp = split(line, " "); // split by space on user and message
-				m_data.emplace(temp[0], temp[1]);
+				m_data->emplace(temp[0], temp[1]);
 			}
 		}
 		fclose(state_file);
@@ -205,19 +207,21 @@ std::string Server::handleMessage(IMessage* m)
 		response = handleRequest(dynamic_cast<RequestMessage*>(m));		
 	}
 	else
+	{
 		handleAuthorizedMessage(dynamic_cast<AuthorizedMessage*>(m));
+	}
 	return response;
 }
 
 void Server::handleAuthorizedMessage(AuthorizedMessage* m)
 {
 	if (userExists(m->GetUsername(), m->GetPassword()) != 2) {
-		printf("User %s with password %s doesn't exist\n", m->GetUsername().c_str(), m->GetPassword().c_str());
+		printf("User %s with password %s doesn't exist\n\n", m->GetUsername().c_str(), m->GetPassword().c_str());
 		return;
 	}
 	if (!checkRights(m->GetUsername(), m->GetFormat()))
 	{
-		printf("User %s can't send %s messages\n", m->GetUsername().c_str(), toString(m->GetFormat()).c_str());
+		printf("User %s can't send %s messages\n\n", m->GetUsername().c_str(), toString(m->GetFormat()).c_str());
 		return;
 	}
 	std::string data_to_store;
@@ -247,7 +251,7 @@ void Server::handleAuthorizedMessage(AuthorizedMessage* m)
 	}
 	printf("-----RECV-----\n%s %s\n--------------\n\n", m->GetUsername().c_str(), data_to_store.c_str());
 	fflush(stdout);
-	m_data.emplace(m->GetUsername(), data_to_store); // store it in the feed
+	m_data->emplace(m->GetUsername(), data_to_store); // store it in the feed
 	fileAppend("resources\\STATE", m->GetUsername() + " " + data_to_store + "\r\n"); // store it in the file for subsequent runs
 }
 
@@ -257,46 +261,30 @@ std::string Server::handleRequest(RequestMessage* m)
 	auto endsWith = [](const std::string& fileName, const std::string& ext) {
 		return fileName.substr(fileName.size() - ext.size()) == ext;
 	};
-	auto&& filename = m->GetMsg();
-	if (filename == "\\")
-	{
-		std::string payload = "<!DOCTYPE html>"\
-			"<html>" \
-			"<head>" \
-			"<meta charset = \"UTF-8\">" \
-			"<title>Server Content</title>" \
-			"</head>" \
-			"<body>\n";
-		for (auto&& [user, msg] : m_data)
-		{
-			if (fileExists("resources/" + msg) && (endsWith(msg, ".png") || endsWith(msg, ".jpg")))
-			{
-				payload += "<p>" + user + ":<br><img src=\"/" + msg + "\"></p>\n";
-			}
-			else
-			{
-				payload += (user + ": " + msg + "<br>"); // collect all the feed and send it back to browser
-			}
-		}
-		std::string end = "</body>\n</html>";
-		response = "HTTP/1.1 200 OK\r\nContent-Type: text/html\r\nContent-Length: " + toStr((int)payload.size()) + "\r\n\r\n" + payload + end;
+	auto&& root = m->GetMsg();
+	ResponseBuilder r_b;
+	if (root == "\\")
+	{		
+		r_b.SetCode(200);
+		r_b.SetContent(*m_data);
+		r_b.SetContentType(text_html);
+		response = r_b.Build();
 	}
-	else if (fileExists("resources/" + filename) && (endsWith(filename, ".png") || endsWith(filename, ".jpg") || endsWith(filename, ".ico")))
-	{
-		std::ifstream file("resources/" + filename, std::ios::binary);
-		if (file.is_open())
+	else {
+		auto&& filename = "resources/" + root;
+		if (fileExists(filename) && (endsWith(filename, ".png") || endsWith(filename, ".jpg") || endsWith(filename, ".ico")))
 		{
-			std::string fileData(std::istreambuf_iterator<char>(file), {});
-			response = "HTTP/1.1 200 OK\r\nContent-Type: image/png\r\nContent-Length: " + std::to_string(fileData.size()) + "\r\n\r\n" + fileData;
+			File f(filename);
+			r_b.SetCode(200);
+			r_b.SetContent(f);
+			r_b.SetContentType(image_png);
+			response = r_b.Build();
 		}
 		else
 		{
-			printf("Can't open file\n");
+			r_b.SetCode(404);
+			response = r_b.Build();
 		}
-	}
-	else
-	{
-		response = "HTTP/1.1 404 Not Found\r\n\r\n";
 	}
 	return response;
 }

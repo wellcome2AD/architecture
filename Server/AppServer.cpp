@@ -73,7 +73,6 @@ void Server::run()
 		{
 			client->sendStr(response);
 		}
-		client->close();
 	}
 }
 
@@ -234,18 +233,8 @@ void Server::handleAuthorizedMessage(AuthorizedMessage* m)
 	case file:
 	{
 		std::string fileName = createUniqueFileName((dynamic_cast<FileMessage*>(m))->GetExtension().c_str());
-		std::ofstream file("resources/" + fileName, std::ios::binary);
-		if (file.is_open())
-		{
-			auto temp = m->GetMsg();
-			std::copy(temp.begin(), temp.end(), std::ostreambuf_iterator<char>(file));
-			data_to_store = fileName;
-		}
-		else
-		{
-			printf("Can't open file %s\n", ("resources/" + fileName).c_str());
-			return;
-		}
+		fileWrite("resources/" + fileName, m->GetMsg().c_str(), m->GetMsg().size(), true);
+		data_to_store = fileName;
 		break;
 	}
 	}

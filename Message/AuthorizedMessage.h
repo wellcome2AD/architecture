@@ -10,8 +10,8 @@ public:
 	virtual format GetFormat() const = 0;
 	virtual std::string GetMsg() const override;
 	virtual void SetMsg(const std::string& m) override;
-	virtual void Read(Reader*) = 0;
-	virtual void Write(Writer* w) const = 0;
+	virtual void Deserialise(Deserialiser& d) = 0;
+	virtual void Serialise(Serialiser& s) const = 0;
 
 	virtual std::string GetUsername() const;
 	virtual void SetUsername(const std::string& n);

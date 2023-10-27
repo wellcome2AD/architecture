@@ -4,8 +4,8 @@
 
 #define SIZE_OF_FORMAT 4
 
-class Reader;
-class Writer;
+class Deserialiser;
+class Serialiser;
 
 enum format {
 	text, file, getReq
@@ -38,6 +38,6 @@ public:
 	virtual format GetFormat() const = 0;
 	virtual std::string GetMsg() const = 0;
 	virtual void SetMsg(const std::string& m) = 0;
-	virtual void Read(Reader* r) = 0;
-	virtual void Write(Writer* w) const = 0;
+	virtual void Deserialise(Deserialiser& r) = 0;
+	virtual void Serialise(Serialiser& w) const = 0;
 };

@@ -2,7 +2,8 @@
 
 #include "AppClient.h"
 #include "helpers/SocketClient.h"
-#include "../Writer/Writer.h"
+#include "../Serialiser/SocketSerialiser.h"
+#include "../Serialiser/SerialiserOperators.h"
 #include "../helpers/UtilString.h"
 #include "../helpers/UtilFile.h"
 
@@ -26,8 +27,8 @@ bool Client::send(const std::string& url, const AuthorizedMessage* msg)
 
     if (succes_connect)
     {        
-        Writer* w = new Writer(&s);
-        *w << msg;
+        SocketSerialiser serialiser(&s);
+        serialiser << msg;
         printf("data format %s, ", toString(msg->GetFormat()).c_str());
         printf("data size %zd\n", msg->GetMsg().size());
     }

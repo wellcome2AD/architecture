@@ -131,18 +131,21 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\Deserialiser\SocketDeserialiser.cpp" />
     <ClCompile Include="..\helpers\Socket.cpp" />
     <ClCompile Include="..\Message\AuthorizedMessage.cpp" />
     <ClCompile Include="..\Message\FileMessage.cpp" />
     <ClCompile Include="..\Message\RequestMessage.cpp" />
     <ClCompile Include="..\Message\TextMessage.cpp" />
-    <ClCompile Include="..\Reader\SocketReader.cpp" />
-    <ClCompile Include="..\Writer\SocketWriter.cpp" />
+    <ClCompile Include="..\Serialiser\SocketSerialiser.cpp" />
     <ClCompile Include="AppClient.cpp" />
     <ClCompile Include="AppClientMain.cpp" />
     <ClCompile Include="helpers\SocketClient.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\Deserialiser\Deserialiser.h" />
+    <ClInclude Include="..\Deserialiser\DeserialiserOperators.h" />
+    <ClInclude Include="..\Deserialiser\SocketDeserialiser.h" />
     <ClInclude Include="..\helpers\Socket.h" />
     <ClInclude Include="..\helpers\UtilFile.h" />
     <ClInclude Include="..\helpers\UtilString.h" />
@@ -151,10 +154,9 @@
     <ClInclude Include="..\Message\IMessage.h" />
     <ClInclude Include="..\Message\RequestMessage.h" />
     <ClInclude Include="..\Message\TextMessage.h" />
-    <ClInclude Include="..\Reader\Reader.h" />
-    <ClInclude Include="..\Reader\SocketReader.h" />
-    <ClInclude Include="..\Writer\SocketWriter.h" />
-    <ClInclude Include="..\Writer\Writer.h" />
+    <ClInclude Include="..\Serialiser\Serialiser.h" />
+    <ClInclude Include="..\Serialiser\SerialiserOperators.h" />
+    <ClInclude Include="..\Serialiser\SocketSerialiser.h" />
     <ClInclude Include="AppClient.h" />
     <ClInclude Include="helpers\SocketClient.h" />
   </ItemGroup>

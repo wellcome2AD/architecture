@@ -7,8 +7,8 @@ public:
 	FileMessage() = default;
 	FileMessage(const std::string& username, const std::string& password, const std::string& extension, const std::string& message);
 	
-	virtual void Read(Reader*) override;
-	virtual void Write(Writer* w) const override;
+	virtual void Deserialise(Deserialiser& d) override;
+	virtual void Serialise(Serialiser& s) const override;
 	virtual format GetFormat() const override;
 
 	std::string GetExtension() const;

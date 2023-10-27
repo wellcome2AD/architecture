@@ -1,5 +1,5 @@
 #include "RequestMessage.h"
-#include "../Reader/Reader.h"
+#include "../Serialiser/Serialiser.h"
 
 RequestMessage::RequestMessage(const std::string& message) : _message(message) {}
 
@@ -9,6 +9,6 @@ std::string RequestMessage::GetMsg() const { return _message; }
 
 void RequestMessage::SetMsg(const std::string& m) { _message = m; }
 
-void RequestMessage::Read(Reader* r) {}
+void RequestMessage::Deserialise(Deserialiser& r) {}
 
-void RequestMessage::Write(Writer* w) const {}
+void RequestMessage::Serialise(Serialiser& w) const {}

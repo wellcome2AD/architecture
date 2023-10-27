@@ -9,7 +9,8 @@
 #include <algorithm>
 
 #include "AppServer.h"
-#include "../Reader/Reader.h"
+#include "../Deserialiser/DeserialiserOperators.h"
+#include "../Deserialiser/SocketDeserialiser.h"
 #include "../helpers/UtilString.h"
 #include "../helpers/UtilFile.h"
 #include "../Message/IMessage.h"
@@ -62,7 +63,7 @@ void Server::run()
 			continue;
 		}
 
-		Reader r(&*client);
+		SocketDeserialiser r(&*client);
 		IMessage* msg = nullptr;
 		r >> msg;
 		auto response = handleMessage(msg);
@@ -258,7 +259,7 @@ std::string Server::handleRequest(RequestMessage* m)
 	};
 	auto&& filename = m->GetMsg();
 	if (filename == "\\")
-	{ // main entry point (e.g. http://localhost:12345/)
+	{
 		std::string payload = "<!DOCTYPE html>"\
 			"<html>" \
 			"<head>" \

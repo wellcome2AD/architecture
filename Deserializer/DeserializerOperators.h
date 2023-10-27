@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Deserialiser.h"
+#include "Deserializer.h"
 #include "../Message/IMessage.h"
 #include "../Message/TextMessage.h"
 #include "../Message/FileMessage.h"
@@ -9,7 +9,7 @@
 
 typedef size_t MSG_FIELD_SIZE_TYPE;
 
-inline Deserialiser& operator>>(Deserialiser&  d, MSG_FIELD_SIZE_TYPE& size)
+inline Deserializer& operator>>(Deserializer&  d, MSG_FIELD_SIZE_TYPE& size)
 {
 	char data[sizeof(MSG_FIELD_SIZE_TYPE)];
 	for (size_t i = 0; i < sizeof(MSG_FIELD_SIZE_TYPE); ++i)
@@ -21,7 +21,7 @@ inline Deserialiser& operator>>(Deserialiser&  d, MSG_FIELD_SIZE_TYPE& size)
 	return d;
 }
 
-inline Deserialiser& operator>>(Deserialiser& d, std::string& str)
+inline Deserializer& operator>>(Deserializer& d, std::string& str)
 {
 	MSG_FIELD_SIZE_TYPE size;
 	d >> size;
@@ -34,7 +34,7 @@ inline Deserialiser& operator>>(Deserialiser& d, std::string& str)
 	return d;
 }
 
-inline Deserialiser& operator>>(Deserialiser& d, IMessage*& m)
+inline Deserializer& operator>>(Deserializer& d, IMessage*& m)
 {
 	std::string type;
 	for (size_t i = 0; i < SIZE_OF_FORMAT; ++i)
@@ -64,7 +64,7 @@ inline Deserialiser& operator>>(Deserialiser& d, IMessage*& m)
 
 	if (m)
 	{
-		m->Deserialise(d);
+		m->Deserialize(d);
 	}
 
 	return d;

@@ -21,11 +21,11 @@
     <ClCompile Include="..\Message\RequestMessage.cpp">
       <Filter>message</Filter>
     </ClCompile>
-    <ClCompile Include="..\Serialiser\SocketSerialiser.cpp">
-      <Filter>serialiser</Filter>
+    <ClCompile Include="..\Deserializer\SocketDeserializer.cpp">
+      <Filter>deserializer</Filter>
     </ClCompile>
-    <ClCompile Include="..\Deserialiser\SocketDeserialiser.cpp">
-      <Filter>deserialiser</Filter>
+    <ClCompile Include="..\Serializer\SocketSerializer.cpp">
+      <Filter>serializer</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -57,23 +57,23 @@
     <ClInclude Include="..\Message\RequestMessage.h">
       <Filter>message</Filter>
     </ClInclude>
-    <ClInclude Include="..\Serialiser\Serialiser.h">
-      <Filter>serialiser</Filter>
+    <ClInclude Include="..\Deserializer\Deserializer.h">
+      <Filter>deserializer</Filter>
     </ClInclude>
-    <ClInclude Include="..\Serialiser\SerialiserOperators.h">
-      <Filter>serialiser</Filter>
+    <ClInclude Include="..\Deserializer\DeserializerOperators.h">
+      <Filter>deserializer</Filter>
     </ClInclude>
-    <ClInclude Include="..\Serialiser\SocketSerialiser.h">
-      <Filter>serialiser</Filter>
+    <ClInclude Include="..\Deserializer\SocketDeserializer.h">
+      <Filter>deserializer</Filter>
     </ClInclude>
-    <ClInclude Include="..\Deserialiser\Deserialiser.h">
-      <Filter>deserialiser</Filter>
+    <ClInclude Include="..\Serializer\Serializer.h">
+      <Filter>serializer</Filter>
     </ClInclude>
-    <ClInclude Include="..\Deserialiser\DeserialiserOperators.h">
-      <Filter>deserialiser</Filter>
+    <ClInclude Include="..\Serializer\SerializerOperators.h">
+      <Filter>serializer</Filter>
     </ClInclude>
-    <ClInclude Include="..\Deserialiser\SocketDeserialiser.h">
-      <Filter>deserialiser</Filter>
+    <ClInclude Include="..\Serializer\SocketSerializer.h">
+      <Filter>serializer</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -83,11 +83,11 @@
     <Filter Include="message">
       <UniqueIdentifier>{ed8735a9-c799-4290-b605-b27cf119fbae}</UniqueIdentifier>
     </Filter>
-    <Filter Include="deserialiser">
-      <UniqueIdentifier>{16e71b7a-8d55-4f22-bc65-244946ee5c0c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="serialiser">
+    <Filter Include="serializer">
       <UniqueIdentifier>{2c2fe887-4b2c-4ce1-b8b0-2fc1aa463c27}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="deserializer">
+      <UniqueIdentifier>{16e71b7a-8d55-4f22-bc65-244946ee5c0c}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

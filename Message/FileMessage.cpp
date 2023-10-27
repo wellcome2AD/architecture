@@ -1,6 +1,6 @@
 #include "FileMessage.h"
-#include "../Serialiser/SerialiserOperators.h"
-#include "../Deserialiser/DeserialiserOperators.h"
+#include "../Serializer/SerializerOperators.h"
+#include "../Deserializer/DeserializerOperators.h"
 
 FileMessage::FileMessage(const std::string& username, const std::string& password, const std::string& extension, const std::string& message)
 	:
@@ -8,12 +8,12 @@ FileMessage::FileMessage(const std::string& username, const std::string& passwor
 	  _extension(extension)
 {}
 
-void FileMessage::Deserialise(Deserialiser& r)
+void FileMessage::Deserialize(Deserializer& r)
 {
 	r >> _username >> _password >> _extension >> _message;
 }
 
-void FileMessage::Serialise(Serialiser& w) const
+void FileMessage::Serialize(Serializer& w) const
 {
 
 	w << _username << _password << _extension << _message << my_endl();

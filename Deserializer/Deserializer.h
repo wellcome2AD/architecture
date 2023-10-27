@@ -1,6 +1,6 @@
 #pragma once
 
-class Deserialiser
+class Deserializer
 {
 public:
 	virtual void Recv() = 0;

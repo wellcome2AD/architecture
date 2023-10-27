@@ -1,6 +1,6 @@
 #pragma once
 
-class Serialiser
+class Serializer
 {
 public:
 	virtual void PutChar(char c) = 0;

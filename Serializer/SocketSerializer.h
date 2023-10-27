@@ -2,18 +2,18 @@
 
 #include <vector>
 
-#include "Serialiser.h"
+#include "Serializer.h"
 
 class Socket;
 
-class SocketSerialiser : public Serialiser
+class SocketSerializer : public Serializer
 {
 private:
 	Socket* _socket;
 	std::vector<char> _buffer;
 
 public:
-	SocketSerialiser(Socket* s);
+	SocketSerializer(Socket* s);
 	virtual void PutChar(char c) override;
 	virtual void Flush() override;
 };

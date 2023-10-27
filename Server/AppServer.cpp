@@ -9,8 +9,8 @@
 #include <algorithm>
 
 #include "AppServer.h"
-#include "../Deserialiser/DeserialiserOperators.h"
-#include "../Deserialiser/SocketDeserialiser.h"
+#include "../Deserializer/DeserializerOperators.h"
+#include "../Deserializer/SocketDeserializer.h"
 #include "../helpers/UtilString.h"
 #include "../helpers/UtilFile.h"
 #include "../Message/IMessage.h"
@@ -63,7 +63,7 @@ void Server::run()
 			continue;
 		}
 
-		SocketDeserialiser r(&*client);
+		SocketDeserializer r(&*client);
 		IMessage* msg = nullptr;
 		r >> msg;
 		auto response = handleMessage(msg);

@@ -1,16 +1,16 @@
-#include "SocketDeserialiser.h"
+#include "SocketDeserializer.h"
 #include "../helpers/Socket.h"
 
-SocketDeserialiser::SocketDeserialiser(Socket* s) : _socket(s), _offset(0), _count(0) {}
+SocketDeserializer::SocketDeserializer(Socket* s) : _socket(s), _offset(0), _count(0) {}
 
-void SocketDeserialiser::Recv()
+void SocketDeserializer::Recv()
 {
 	//вызываем _socket->recv() и после этого меняем поля _count, _offset.
 	_count = _socket->recv();
 	_offset = 0;
 }
 
-char SocketDeserialiser::GetChar()
+char SocketDeserializer::GetChar()
 
 {
 	if (_count == 0)

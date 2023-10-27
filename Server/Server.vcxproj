@@ -135,22 +135,22 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\Deserialiser\SocketDeserialiser.cpp" />
+    <ClCompile Include="..\Deserializer\SocketDeserializer.cpp" />
     <ClCompile Include="..\helpers\Socket.cpp" />
     <ClCompile Include="..\Message\AuthorizedMessage.cpp" />
     <ClCompile Include="..\Message\FileMessage.cpp" />
     <ClCompile Include="..\Message\RequestMessage.cpp" />
     <ClCompile Include="..\Message\TextMessage.cpp" />
-    <ClCompile Include="..\Serialiser\SocketSerialiser.cpp" />
+    <ClCompile Include="..\Serializer\SocketSerializer.cpp" />
     <ClCompile Include="AppServer.cpp" />
     <ClCompile Include="AppServerMain.cpp" />
     <ClCompile Include="helpers\SocketServer.cpp" />
     <ClCompile Include="ResponseBuilder\ResponseBuilder.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\Deserialiser\Deserialiser.h" />
-    <ClInclude Include="..\Deserialiser\DeserialiserOperators.h" />
-    <ClInclude Include="..\Deserialiser\SocketDeserialiser.h" />
+    <ClInclude Include="..\Deserializer\Deserializer.h" />
+    <ClInclude Include="..\Deserializer\DeserializerOperators.h" />
+    <ClInclude Include="..\Deserializer\SocketDeserializer.h" />
     <ClInclude Include="..\helpers\Socket.h" />
     <ClInclude Include="..\helpers\UtilFile.h" />
     <ClInclude Include="..\helpers\UtilString.h" />
@@ -159,9 +159,9 @@
     <ClInclude Include="..\Message\IMessage.h" />
     <ClInclude Include="..\Message\RequestMessage.h" />
     <ClInclude Include="..\Message\TextMessage.h" />
-    <ClInclude Include="..\Serialiser\Serialiser.h" />
-    <ClInclude Include="..\Serialiser\SerialiserOperators.h" />
-    <ClInclude Include="..\Serialiser\SocketSerialiser.h" />
+    <ClInclude Include="..\Serializer\Serializer.h" />
+    <ClInclude Include="..\Serializer\SerializerOperators.h" />
+    <ClInclude Include="..\Serializer\SocketSerializer.h" />
     <ClInclude Include="AppServer.h" />
     <ClInclude Include="helpers\SocketServer.h" />
     <ClInclude Include="ResponseBuilder\IConvertableToHttp.h" />

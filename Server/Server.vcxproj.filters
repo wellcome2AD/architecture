@@ -21,14 +21,14 @@
     <ClCompile Include="..\Message\RequestMessage.cpp">
       <Filter>message</Filter>
     </ClCompile>
-    <ClCompile Include="..\Deserialiser\SocketDeserialiser.cpp">
-      <Filter>deserialiser</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Serialiser\SocketSerialiser.cpp">
-      <Filter>serialiser</Filter>
-    </ClCompile>
     <ClCompile Include="ResponseBuilder\ResponseBuilder.cpp">
       <Filter>response_builder</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Serializer\SocketSerializer.cpp">
+      <Filter>serializer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Deserializer\SocketDeserializer.cpp">
+      <Filter>deserializer</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -60,24 +60,6 @@
     <ClInclude Include="..\Message\RequestMessage.h">
       <Filter>message</Filter>
     </ClInclude>
-    <ClInclude Include="..\Deserialiser\Deserialiser.h">
-      <Filter>deserialiser</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Deserialiser\DeserialiserOperators.h">
-      <Filter>deserialiser</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Deserialiser\SocketDeserialiser.h">
-      <Filter>deserialiser</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Serialiser\Serialiser.h">
-      <Filter>serialiser</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Serialiser\SerialiserOperators.h">
-      <Filter>serialiser</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Serialiser\SocketSerialiser.h">
-      <Filter>serialiser</Filter>
-    </ClInclude>
     <ClInclude Include="ResponseBuilder\IConvertableToHttp.h">
       <Filter>response_builder</Filter>
     </ClInclude>
@@ -87,6 +69,24 @@
     <ClInclude Include="ResponseBuilder\ServerContent.h">
       <Filter>response_builder</Filter>
     </ClInclude>
+    <ClInclude Include="..\Serializer\Serializer.h">
+      <Filter>serializer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Serializer\SerializerOperators.h">
+      <Filter>serializer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Serializer\SocketSerializer.h">
+      <Filter>serializer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Deserializer\Deserializer.h">
+      <Filter>deserializer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Deserializer\DeserializerOperators.h">
+      <Filter>deserializer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Deserializer\SocketDeserializer.h">
+      <Filter>deserializer</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="helpers">
@@ -95,14 +95,14 @@
     <Filter Include="message">
       <UniqueIdentifier>{b53c1bc5-56e3-4f8a-8a84-766f53a00b4b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="deserialiser">
-      <UniqueIdentifier>{7bf0c5fc-2601-4e2c-b567-7cb20758cfd4}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="serialiser">
-      <UniqueIdentifier>{4538c03a-f122-40e8-aa5d-7c7dd5961c66}</UniqueIdentifier>
-    </Filter>
     <Filter Include="response_builder">
       <UniqueIdentifier>{b583cbaf-878f-4d3e-a5da-6baa5830322f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="serializer">
+      <UniqueIdentifier>{65998481-504e-4602-b7ab-eadf2929c292}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="deserializer">
+      <UniqueIdentifier>{f0f77033-1cf8-4137-857e-cf186be78a08}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

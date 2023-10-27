@@ -1,12 +1,12 @@
 #pragma once
 
-#include "Deserialiser.h"
+#include "Deserializer.h"
 
 class Socket;
 
 typedef size_t MSG_FIELD_SIZE_TYPE;
 
-class SocketDeserialiser : public Deserialiser
+class SocketDeserializer : public Deserializer
 {
 private:
 	Socket* _socket;
@@ -14,7 +14,7 @@ private:
 	size_t _count;
 
 public:
-	SocketDeserialiser(Socket* s);
+	SocketDeserializer(Socket* s);
 	virtual void Recv() override;
 	virtual char GetChar() override;
 };

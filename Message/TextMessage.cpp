@@ -1,13 +1,13 @@
 #include "TextMessage.h"
-#include "../Deserialiser/DeserialiserOperators.h"
-#include "../Serialiser/SerialiserOperators.h"
+#include "../Deserializer/DeserializerOperators.h"
+#include "../Serializer/SerializerOperators.h"
 
-void TextMessage::Serialise(Serialiser& s) const
+void TextMessage::Serialize(Serializer& s) const
 {
 	s << _username << _password << _message << my_endl();
 }
 
-void TextMessage::Deserialise(Deserialiser& d)
+void TextMessage::Deserialize(Deserializer& d)
 {
 	d >> _username >> _password >> _message;
 }

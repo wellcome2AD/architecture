@@ -11,11 +11,14 @@
 #include "AppServer.h"
 #include "../Deserializer/DeserializerOperators.h"
 #include "../Deserializer/SocketDeserializer.h"
+#include "../Serializer/SerializerOperators.h"
+#include "../Serializer/SocketSerializer.h"
 #include "../helpers/UtilString.h"
 #include "../helpers/UtilFile.h"
 #include "../Message/IMessage.h"
 #include "../Message/FileMessage.h"
 #include "../Message/RequestMessage.h"
+#include "../Message/MessagePack.h"
 #include "ResponseBuilder/ResponseBuilder.h"
 #include "../helpers/File.h"
 
@@ -63,17 +66,16 @@ void Server::run()
 		if (!client->isValid())
 		{
 			continue;
-		}		
+		}
 		SocketDeserializer r(&*client);
 		IMessage* msg = nullptr;
-		r >> msg;		
+		r >> msg;
 		handleMessage(msg, client);
-		/*if (response.size() != 0)
+		if (msg->GetFormat() != getReq)
 		{
-			client->sendStr(response);
-		}*/
-		_clients.push_back(client); // memorize client connection
-		// client->close();
+			_clients.push_back(client); // memorize client connection if client is not browser
+		}
+	}
 }
 
 void Server::synchState()
@@ -200,7 +202,7 @@ void Server::handleMessage(IMessage* m, std::shared_ptr<Socket> client)
 	{
 		return;
 	}
-	
+
 	if (m->GetFormat() == getReq)
 	{
 		response = handleRequest(dynamic_cast<RequestMessage*>(m));
@@ -212,6 +214,16 @@ void Server::handleMessage(IMessage* m, std::shared_ptr<Socket> client)
 	else
 	{
 		handleAuthorizedMessage(dynamic_cast<AuthorizedMessage*>(m));
+		std::shared_ptr<MessagePack> msg_pack;
+		for (auto&& msg : *m_data)
+		{
+			msg_pack->AddMsg(std::shared_ptr<TextMessage>(new TextMessage(msg.first, std::string(), msg.second)));
+		}
+		for (auto& client : _clients)
+		{
+			SocketSerializer w(&*client);			
+			w << msg_pack;
+		}
 	}
 }
 
@@ -265,13 +277,13 @@ std::string Server::handleRequest(RequestMessage* m)
 	else {
 		auto&& filename = "resources/" + root;
 		if (fileExists(filename) && (endsWith(filename, ".png") || endsWith(filename, ".jpg") || endsWith(filename, ".ico")))
-			{
+		{
 			File f(filename);
 			r_b.SetCode(200);
 			r_b.SetContent(f);
 			r_b.SetContentType(image_png);
 			response = r_b.Build();
-			}
+		}
 		else
 		{
 			r_b.SetCode(404);

@@ -2,11 +2,10 @@
 
 #include <vector>
 #include <string>
-#include <map>
-#include <set>
 #include <memory>
 
 #include "helpers/SocketServer.h"
+#include "ResponseBuilder/ServerContent.h"
 #include "../Message/AuthorizedMessage.h"
 #include "../Message/RequestMessage.h"
 
@@ -34,7 +33,7 @@ private:
     SocketServer m_socket; // server socket
     time_t last_synch_time = 0;
     long offset = 0;
-    std::multimap<std::string, std::string> m_data; // representation of uploaded data
+    std::unique_ptr<ServerContent> m_data = std::make_unique<ServerContent>();
     std::map<std::string, std::string> users;
     std::map<std::string, std::vector<std::string>> rights;
 };

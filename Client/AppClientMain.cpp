@@ -6,7 +6,6 @@
 #include "../Message/AuthorizedMessage.h"
 #include "../Message/TextMessage.h"
 #include "../Message/FileMessage.h"
-#include "../Writer/Writer.h"
 #include "../helpers/UtilFile.h"
 #include "../helpers/UtilString.h"
 

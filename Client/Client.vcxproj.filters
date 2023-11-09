@@ -9,12 +9,6 @@
     <ClCompile Include="helpers\SocketClient.cpp">
       <Filter>helpers</Filter>
     </ClCompile>
-    <ClCompile Include="..\Writer\SocketWriter.cpp">
-      <Filter>writer</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Reader\SocketReader.cpp">
-      <Filter>reader</Filter>
-    </ClCompile>
     <ClCompile Include="..\Message\FileMessage.cpp">
       <Filter>message</Filter>
     </ClCompile>
@@ -26,6 +20,15 @@
     </ClCompile>
     <ClCompile Include="..\Message\RequestMessage.cpp">
       <Filter>message</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Deserializer\SocketDeserializer.cpp">
+      <Filter>deserializer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Serializer\SocketSerializer.cpp">
+      <Filter>serializer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\helpers\File.cpp">
+      <Filter>helpers</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -42,18 +45,6 @@
     <ClInclude Include="helpers\SocketClient.h">
       <Filter>helpers</Filter>
     </ClInclude>
-    <ClInclude Include="..\Writer\SocketWriter.h">
-      <Filter>writer</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Writer\Writer.h">
-      <Filter>writer</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Reader\Reader.h">
-      <Filter>reader</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Reader\SocketReader.h">
-      <Filter>reader</Filter>
-    </ClInclude>
     <ClInclude Include="..\Message\FileMessage.h">
       <Filter>message</Filter>
     </ClInclude>
@@ -69,6 +60,27 @@
     <ClInclude Include="..\Message\RequestMessage.h">
       <Filter>message</Filter>
     </ClInclude>
+    <ClInclude Include="..\Deserializer\Deserializer.h">
+      <Filter>deserializer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Deserializer\DeserializerOperators.h">
+      <Filter>deserializer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Deserializer\SocketDeserializer.h">
+      <Filter>deserializer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Serializer\Serializer.h">
+      <Filter>serializer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Serializer\SerializerOperators.h">
+      <Filter>serializer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Serializer\SocketSerializer.h">
+      <Filter>serializer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\helpers\File.h">
+      <Filter>helpers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="helpers">
@@ -77,10 +89,10 @@
     <Filter Include="message">
       <UniqueIdentifier>{ed8735a9-c799-4290-b605-b27cf119fbae}</UniqueIdentifier>
     </Filter>
-    <Filter Include="writer">
+    <Filter Include="serializer">
       <UniqueIdentifier>{2c2fe887-4b2c-4ce1-b8b0-2fc1aa463c27}</UniqueIdentifier>
     </Filter>
-    <Filter Include="reader">
+    <Filter Include="deserializer">
       <UniqueIdentifier>{16e71b7a-8d55-4f22-bc65-244946ee5c0c}</UniqueIdentifier>
     </Filter>
   </ItemGroup>

@@ -69,3 +69,25 @@ inline Deserializer& operator>>(Deserializer& d, IMessage*& m)
 
 	return d;
 }
+
+template <class T>
+inline Deserializer& operator>>(Deserializer& d, std::vector<T>& v)
+{
+	size_t size;
+	d >> size;
+	v = std::vector<T>(size);
+	for (size_t i = 0; i < size; ++i)
+	{
+		d >> v[i];
+	}
+	return d;
+}
+
+template <class T>
+inline Deserializer& operator>>(Deserializer& d, std::shared_ptr<T>& ptr)
+{
+	T* data = nullptr;
+	d >> data;
+	ptr.reset(data);
+	return d;
+}

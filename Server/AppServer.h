@@ -25,12 +25,15 @@ private:
     void loadRights();
     int userExists(const std::string& userName, const std::string& password) const;
     bool checkRights(const std::string& userName, format msgType) const;
-    std::string handleMessage(IMessage* m);
+    void handleMessage(IMessage* m, std::shared_ptr<Socket> client);
     void handleAuthorizedMessage(AuthorizedMessage* m);
     std::string handleRequest(RequestMessage* tokens);
 
 private:
     SocketServer m_socket; // server socket
+    
+    std::vector<std::shared_ptr<Socket>> _clients;
+
     time_t last_synch_time = 0;
     long offset = 0;
     std::unique_ptr<ServerContent> m_data = std::make_unique<ServerContent>();

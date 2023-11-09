@@ -63,17 +63,17 @@ void Server::run()
 		if (!client->isValid())
 		{
 			continue;
-		}
-
+		}		
 		SocketDeserializer r(&*client);
 		IMessage* msg = nullptr;
-		r >> msg;
-		auto response = handleMessage(msg);
-		if (response.size() != 0) 
+		r >> msg;		
+		handleMessage(msg, client);
+		/*if (response.size() != 0)
 		{
 			client->sendStr(response);
-		}
-	}
+		}*/
+		_clients.push_back(client); // memorize client connection
+		// client->close();
 }
 
 void Server::synchState()
@@ -193,23 +193,26 @@ bool Server::checkRights(const std::string& userName, format msgType) const
 	return user_has_right;
 }
 
-std::string Server::handleMessage(IMessage* m)
+void Server::handleMessage(IMessage* m, std::shared_ptr<Socket> client)
 {
 	std::string response;
 	if (m == nullptr)
 	{
-		return response;
+		return;
 	}
 	
 	if (m->GetFormat() == getReq)
 	{
-		response = handleRequest(dynamic_cast<RequestMessage*>(m));		
+		response = handleRequest(dynamic_cast<RequestMessage*>(m));
+		if (response.size() != 0)
+		{
+			client->sendStr(response);
+		}
 	}
 	else
 	{
 		handleAuthorizedMessage(dynamic_cast<AuthorizedMessage*>(m));
 	}
-	return response;
 }
 
 void Server::handleAuthorizedMessage(AuthorizedMessage* m)
@@ -253,7 +256,7 @@ std::string Server::handleRequest(RequestMessage* m)
 	auto&& root = m->GetMsg();
 	ResponseBuilder r_b;
 	if (root == "\\")
-	{		
+	{
 		r_b.SetCode(200);
 		r_b.SetContent(*m_data);
 		r_b.SetContentType(text_html);
@@ -262,13 +265,13 @@ std::string Server::handleRequest(RequestMessage* m)
 	else {
 		auto&& filename = "resources/" + root;
 		if (fileExists(filename) && (endsWith(filename, ".png") || endsWith(filename, ".jpg") || endsWith(filename, ".ico")))
-		{
+			{
 			File f(filename);
 			r_b.SetCode(200);
 			r_b.SetContent(f);
 			r_b.SetContentType(image_png);
 			response = r_b.Build();
-		}
+			}
 		else
 		{
 			r_b.SetCode(404);

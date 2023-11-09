@@ -1,17 +1,15 @@
 #include "TextMessage.h"
-#include "../Reader/Reader.h"
-#include "../Writer/Writer.h"
+#include "../Deserializer/DeserializerOperators.h"
+#include "../Serializer/SerializerOperators.h"
 
-void TextMessage::Write(Writer* w) const
+void TextMessage::Serialize(Serializer& s) const
 {
-	*w << _username << _password << _message << my_endl();
+	s << _username << _password << _message << my_endl();
 }
 
-void TextMessage::Read(Reader* r)
+void TextMessage::Deserialize(Deserializer& d)
 {
-	*r >> _username;
-	*r >> _password;
-	*r >> _message;
+	d >> _username >> _password >> _message;
 }
 
 format TextMessage::GetFormat() const

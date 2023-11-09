@@ -5,8 +5,8 @@
 class TextMessage : public AuthorizedMessage {
 public:
 	using AuthorizedMessage::AuthorizedMessage;
-	virtual void Read(Reader*) override;
-	virtual void Write(Writer* w) const override;
+	virtual void Deserialize(Deserializer& d) override;
+	virtual void Serialize(Serializer& s) const override;
 	virtual format GetFormat() const override;
 };
 

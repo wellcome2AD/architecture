@@ -1,6 +1,6 @@
 #include "FileMessage.h"
-#include "../Reader/Reader.h"
-#include "../Writer/Writer.h"
+#include "../Serializer/SerializerOperators.h"
+#include "../Deserializer/DeserializerOperators.h"
 
 FileMessage::FileMessage(const std::string& username, const std::string& password, const std::string& extension, const std::string& message)
 	:
@@ -8,15 +8,15 @@ FileMessage::FileMessage(const std::string& username, const std::string& passwor
 	  _extension(extension)
 {}
 
-void FileMessage::Read(Reader* r)
+void FileMessage::Deserialize(Deserializer& r)
 {
-	*r >> _username >> _password >> _extension >> _message;
+	r >> _username >> _password >> _extension >> _message;
 }
 
-void FileMessage::Write(Writer* w) const
+void FileMessage::Serialize(Serializer& w) const
 {
 
-	*w << _username << _password << _extension << _message << my_endl();
+	w << _username << _password << _extension << _message << my_endl();
 }
 
 format FileMessage::GetFormat() const { return file; }

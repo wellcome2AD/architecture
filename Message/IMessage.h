@@ -8,7 +8,7 @@ class Deserializer;
 class Serializer;
 
 enum format {
-	text, file, getReq
+	text, file, getReq, msgPack
 };
 
 inline std::string toString(format f) {
@@ -20,6 +20,8 @@ inline std::string toString(format f) {
 		return "file";
 	case getReq:
 		return "GET";
+	default: //case msgPack:
+		return "msgPack";
 	}
 }
 
@@ -29,8 +31,10 @@ inline format fromString(std::string f)
 		return text;
 	else if (f == "file")
 		return file;
-	else
+	else if (f == "GET")
 		return getReq;
+	else
+		return msgPack;
 }
 
 class IMessage {

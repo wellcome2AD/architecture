@@ -139,7 +139,6 @@
     <ClCompile Include="..\helpers\File.cpp" />
     <ClCompile Include="..\helpers\Socket.cpp" />
     <ClCompile Include="..\Message\AuthorizedMessage.cpp" />
-    <ClCompile Include="..\Message\AuthorizedMessagePack.cpp" />
     <ClCompile Include="..\Message\FileMessage.cpp" />
     <ClCompile Include="..\Message\MessagePack.cpp" />
     <ClCompile Include="..\Message\RequestMessage.cpp" />
@@ -160,10 +159,10 @@
     <ClInclude Include="..\helpers\UtilFile.h" />
     <ClInclude Include="..\helpers\UtilString.h" />
     <ClInclude Include="..\Message\AuthorizedMessage.h" />
-    <ClInclude Include="..\Message\MessagePack.h" />
     <ClInclude Include="..\Message\FileMessage.h" />
     <ClInclude Include="..\Message\IMessage.h" />
     <ClInclude Include="..\Message\IMessagePack.h" />
+    <ClInclude Include="..\Message\MessagePack.h" />
     <ClInclude Include="..\Message\RequestMessage.h" />
     <ClInclude Include="..\Message\TextMessage.h" />
     <ClInclude Include="..\Serializer\Serializer.h" />

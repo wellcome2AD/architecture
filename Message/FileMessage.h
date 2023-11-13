@@ -17,8 +17,3 @@ public:
 private:
 	std::string _extension;
 };
-
-inline std::ostream& operator<<(std::ostream& os, const FileMessage& m) {
-	os << m.GetUsername() << m.GetPassword() << toString(m.GetFormat()) << m.GetMsg();
-	return os;
-}

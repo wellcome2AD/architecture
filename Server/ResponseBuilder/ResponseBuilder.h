@@ -16,8 +16,10 @@ inline std::string toString(content_type t)
 	case image_png:
 		return "image/png";
 	default:
-		return std::string();
+		assert(0);
+		break;
 	}
+	return std::string();
 }
 
 class ResponseBuilder

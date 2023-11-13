@@ -1,25 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="AppClient.cpp" />
-    <ClCompile Include="AppClientMain.cpp" />
     <ClCompile Include="..\helpers\Socket.cpp">
       <Filter>helpers</Filter>
     </ClCompile>
     <ClCompile Include="helpers\SocketClient.cpp">
       <Filter>helpers</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Message\FileMessage.cpp">
-      <Filter>message</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Message\TextMessage.cpp">
-      <Filter>message</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Message\AuthorizedMessage.cpp">
-      <Filter>message</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Message\RequestMessage.cpp">
-      <Filter>message</Filter>
     </ClCompile>
     <ClCompile Include="..\Deserializer\SocketDeserializer.cpp">
       <Filter>deserializer</Filter>
@@ -30,9 +16,32 @@
     <ClCompile Include="..\helpers\File.cpp">
       <Filter>helpers</Filter>
     </ClCompile>
+    <ClCompile Include="AppClient.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="AppClientMain.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="MessagesUpdateEvent.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Message\MessagePack.cpp">
+      <Filter>message</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Message\FileMessage.cpp">
+      <Filter>message</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Message\RequestMessage.cpp">
+      <Filter>message</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Message\TextMessage.cpp">
+      <Filter>message</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Message\AuthorizedMessage.cpp">
+      <Filter>message</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="AppClient.h" />
     <ClInclude Include="..\helpers\Socket.h">
       <Filter>helpers</Filter>
     </ClInclude>
@@ -44,21 +53,6 @@
     </ClInclude>
     <ClInclude Include="helpers\SocketClient.h">
       <Filter>helpers</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Message\FileMessage.h">
-      <Filter>message</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Message\TextMessage.h">
-      <Filter>message</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Message\IMessage.h">
-      <Filter>message</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Message\AuthorizedMessage.h">
-      <Filter>message</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Message\RequestMessage.h">
-      <Filter>message</Filter>
     </ClInclude>
     <ClInclude Include="..\Deserializer\Deserializer.h">
       <Filter>deserializer</Filter>
@@ -81,6 +75,42 @@
     <ClInclude Include="..\helpers\File.h">
       <Filter>helpers</Filter>
     </ClInclude>
+    <ClInclude Include="AppClient.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="Event.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="IObservable.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="IObserver.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="MessagesUpdateEvent.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Message\IMessage.h">
+      <Filter>message</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Message\FileMessage.h">
+      <Filter>message</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Message\TextMessage.h">
+      <Filter>message</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Message\IMessagePack.h">
+      <Filter>message</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Message\MessagePack.h">
+      <Filter>message</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Message\AuthorizedMessage.h">
+      <Filter>message</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Message\RequestMessage.h">
+      <Filter>message</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="helpers">
@@ -94,6 +124,12 @@
     </Filter>
     <Filter Include="deserializer">
       <UniqueIdentifier>{16e71b7a-8d55-4f22-bc65-244946ee5c0c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Исходные файлы">
+      <UniqueIdentifier>{3ef60ba8-e0a9-4a62-8e35-2813ffb06bb7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Файлы заголовков">
+      <UniqueIdentifier>{06cb5db8-c7ea-42f4-b101-8831cd84053a}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

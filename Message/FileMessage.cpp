@@ -16,7 +16,7 @@ void FileMessage::Deserialize(Deserializer& r)
 void FileMessage::Serialize(Serializer& w) const
 {
 
-	w << _username << _password << _extension << _message << my_endl();
+	w << _username << _password << _extension << _message;
 }
 
 format FileMessage::GetFormat() const { return file; }

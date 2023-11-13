@@ -3,7 +3,7 @@
 
 int main (int argc, char *argv[])
 {
-    int port = argc > 1 ? atoi(argv[1]) : 0;
+    int port = argc > 1 ? atoi(argv[1]) : 8080;
     Server s;
     while (!s.init(port))
     {

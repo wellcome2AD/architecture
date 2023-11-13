@@ -13,10 +13,76 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="serializer">
+      <UniqueIdentifier>{fa27ba11-b6ba-4992-bcc7-596ebf54ab6e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="deserializer">
+      <UniqueIdentifier>{e735d43a-b996-4eb9-94be-b17f3fca3b65}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="helpers">
+      <UniqueIdentifier>{6b1c3b0b-f84d-42cf-a5b6-be3003443539}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="message">
+      <UniqueIdentifier>{44f50226-1b69-444d-bedc-761586be70e4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AppViewer.h">
       <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Serializer\Serializer.h">
+      <Filter>serializer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Serializer\SerializerOperators.h">
+      <Filter>serializer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Serializer\SocketSerializer.h">
+      <Filter>serializer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Deserializer\Deserializer.h">
+      <Filter>deserializer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Deserializer\DeserializerOperators.h">
+      <Filter>deserializer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Deserializer\SocketDeserializer.h">
+      <Filter>deserializer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\helpers\File.h">
+      <Filter>helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\helpers\Socket.h">
+      <Filter>helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\helpers\UtilFile.h">
+      <Filter>helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\helpers\UtilString.h">
+      <Filter>helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Client\helpers\SocketClient.h">
+      <Filter>helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Message\IMessage.h">
+      <Filter>message</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Message\FileMessage.h">
+      <Filter>message</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Message\TextMessage.h">
+      <Filter>message</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Message\IMessagePack.h">
+      <Filter>message</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Message\MessagePack.h">
+      <Filter>message</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Message\AuthorizedMessage.h">
+      <Filter>message</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Message\RequestMessage.h">
+      <Filter>message</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -25,6 +91,42 @@
     </ClCompile>
     <ClCompile Include="AppViewerMain.cpp">
       <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Client\AppClient.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Client\MessagesUpdateEvent.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Serializer\SocketSerializer.cpp">
+      <Filter>serializer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Deserializer\SocketDeserializer.cpp">
+      <Filter>deserializer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\helpers\File.cpp">
+      <Filter>helpers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\helpers\Socket.cpp">
+      <Filter>helpers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Client\helpers\SocketClient.cpp">
+      <Filter>helpers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Message\MessagePack.cpp">
+      <Filter>message</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Message\FileMessage.cpp">
+      <Filter>message</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Message\RequestMessage.cpp">
+      <Filter>message</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Message\TextMessage.cpp">
+      <Filter>message</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Message\AuthorizedMessage.cpp">
+      <Filter>message</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

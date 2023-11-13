@@ -16,7 +16,7 @@ class Server
 public:
     Server() = default;
     virtual ~Server() = default;
-    bool init(int port = 0); // initialize server socket, load configuration
+    bool init(int port = 8080); // initialize server socket, load configuration
     void run(); // accept incoming connections, receive their data and send responses
 
 private:

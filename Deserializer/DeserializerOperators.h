@@ -1,10 +1,13 @@
 #pragma once
 
+#include <memory>
+
 #include "Deserializer.h"
 #include "../Message/IMessage.h"
 #include "../Message/TextMessage.h"
 #include "../Message/FileMessage.h"
 #include "../Message/RequestMessage.h"
+#include "../Message/MessagePack.h"
 #include "../helpers/UtilString.h"
 
 typedef size_t MSG_FIELD_SIZE_TYPE;
@@ -41,15 +44,20 @@ inline Deserializer& operator>>(Deserializer& d, IMessage*& m)
 	{
 		type.push_back(d.GetChar());
 	}
-	if (type.find("text") != std::string::npos)
+	format f = fromString(type);
+	switch (f)
+	{
+	case text:
 	{
 		m = new TextMessage();
+		break;
 	}
-	else if (type.find("file") != std::string::npos)
+	case file:
 	{
 		m = new FileMessage();
+		break;
 	}
-	else if (type.find("GET") != std::string::npos)
+	case getReq:
 	{
 		char c;
 		std::vector<char> message;
@@ -60,6 +68,16 @@ inline Deserializer& operator>>(Deserializer& d, IMessage*& m)
 		message.push_back('\0');
 		const std::string& filename = join(split(std::string(message.data()), "/"), "\\");
 		m = new RequestMessage(filename);
+		break;
+	}
+	case msgPack:
+	{
+		m = new MessagePack();
+		break;
+	}
+	default:
+		assert(0);
+		break;
 	}
 
 	if (m)

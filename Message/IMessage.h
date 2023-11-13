@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include <assert.h>
 
 #define SIZE_OF_FORMAT 4
 
@@ -12,17 +13,27 @@ enum format {
 };
 
 inline std::string toString(format f) {
+	char res[SIZE_OF_FORMAT + 1];
+	memset(res, 0, (SIZE_OF_FORMAT + 1) * sizeof(char));
 	switch (f)
 	{
 	case text:
-		return "text";
+		strncpy(res, "text", SIZE_OF_FORMAT);
+		break;
 	case file:
-		return "file";
+		strncpy(res, "file", SIZE_OF_FORMAT);
+		break;
 	case getReq:
-		return "GET";
-	default: //case msgPack:
-		return "msgPack";
+		strncpy(res, "GET ", SIZE_OF_FORMAT);
+		break;
+	case msgPack:
+		strncpy(res, "mpck", SIZE_OF_FORMAT);
+		break;
+	default:
+		assert(0);
+		break;
 	}
+	return std::string(res);
 }
 
 inline format fromString(std::string f)
@@ -31,10 +42,12 @@ inline format fromString(std::string f)
 		return text;
 	else if (f == "file")
 		return file;
-	else if (f == "GET")
+	else if (f == "GET ")
 		return getReq;
-	else
+	else if(f == "mpck")
 		return msgPack;
+	assert(0);
+	return text;
 }
 
 class IMessage {

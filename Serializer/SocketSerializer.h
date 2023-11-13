@@ -14,6 +14,7 @@ private:
 
 public:
 	SocketSerializer(Socket* s);
+	virtual ~SocketSerializer() override;
 	virtual void PutChar(char c) override;
 	virtual void Flush() override;
 };

@@ -9,18 +9,6 @@
     <ClCompile Include="helpers\SocketServer.cpp">
       <Filter>helpers</Filter>
     </ClCompile>
-    <ClCompile Include="..\Message\FileMessage.cpp">
-      <Filter>message</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Message\TextMessage.cpp">
-      <Filter>message</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Message\AuthorizedMessage.cpp">
-      <Filter>message</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Message\RequestMessage.cpp">
-      <Filter>message</Filter>
-    </ClCompile>
     <ClCompile Include="ResponseBuilder\ResponseBuilder.cpp">
       <Filter>response_builder</Filter>
     </ClCompile>
@@ -36,8 +24,19 @@
     <ClCompile Include="..\helpers\File.cpp">
       <Filter>helpers</Filter>
     </ClCompile>
-    <ClCompile Include="..\Message\AuthorizedMessagePack.cpp" />
     <ClCompile Include="..\Message\MessagePack.cpp">
+      <Filter>message</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Message\FileMessage.cpp">
+      <Filter>message</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Message\RequestMessage.cpp">
+      <Filter>message</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Message\TextMessage.cpp">
+      <Filter>message</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Message\AuthorizedMessage.cpp">
       <Filter>message</Filter>
     </ClCompile>
   </ItemGroup>
@@ -54,21 +53,6 @@
     </ClInclude>
     <ClInclude Include="helpers\SocketServer.h">
       <Filter>helpers</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Message\FileMessage.h">
-      <Filter>message</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Message\TextMessage.h">
-      <Filter>message</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Message\IMessage.h">
-      <Filter>message</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Message\AuthorizedMessage.h">
-      <Filter>message</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Message\RequestMessage.h">
-      <Filter>message</Filter>
     </ClInclude>
     <ClInclude Include="ResponseBuilder\IConvertableToHttp.h">
       <Filter>response_builder</Filter>
@@ -100,19 +84,31 @@
     <ClInclude Include="..\helpers\File.h">
       <Filter>helpers</Filter>
     </ClInclude>
+    <ClInclude Include="..\Message\IMessage.h">
+      <Filter>message</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Message\FileMessage.h">
+      <Filter>message</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Message\TextMessage.h">
+      <Filter>message</Filter>
+    </ClInclude>
     <ClInclude Include="..\Message\IMessagePack.h">
       <Filter>message</Filter>
     </ClInclude>
     <ClInclude Include="..\Message\MessagePack.h">
       <Filter>message</Filter>
     </ClInclude>
+    <ClInclude Include="..\Message\AuthorizedMessage.h">
+      <Filter>message</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Message\RequestMessage.h">
+      <Filter>message</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="helpers">
       <UniqueIdentifier>{422afd41-4cc8-4b92-9f61-6c7f28aaa884}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="message">
-      <UniqueIdentifier>{b53c1bc5-56e3-4f8a-8a84-766f53a00b4b}</UniqueIdentifier>
     </Filter>
     <Filter Include="response_builder">
       <UniqueIdentifier>{b583cbaf-878f-4d3e-a5da-6baa5830322f}</UniqueIdentifier>
@@ -122,6 +118,9 @@
     </Filter>
     <Filter Include="deserializer">
       <UniqueIdentifier>{f0f77033-1cf8-4137-857e-cf186be78a08}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="message">
+      <UniqueIdentifier>{ab435887-e4a5-4caf-a9eb-bcd2b15ebabe}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

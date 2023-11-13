@@ -46,19 +46,7 @@ inline Serializer& operator<<(Serializer& s, const IMessage* m)
 	{
 		return s;
 	}
-	std::string format;
-	switch (m->GetFormat()) {
-	case text:
-	{
-		format = "text";
-		break;
-	}
-	case file:
-	{
-		format = "file";
-		break;
-	}
-	}
+	std::string format = toString(m->GetFormat());
 	for(size_t i = 0; i < format.size(); ++i)
 	{
 		s.PutChar(format[i]);

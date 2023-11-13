@@ -6,7 +6,7 @@ MessagePack::MessagePack(const std::vector<std::shared_ptr<IMessage>>& msgs)
     : _msgs(msgs) 
 {}
 
-format MessagePack::GetFormat() const { return authorizedMsgPack; }
+format MessagePack::GetFormat() const { return msgPack; }
 
 std::string MessagePack::GetMsg() const { return std::string(); }
 

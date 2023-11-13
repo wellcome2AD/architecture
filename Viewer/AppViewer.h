@@ -1,22 +1,28 @@
 #pragma once
 
-#include <vector>
+#include <string>
+#include <memory>
 
 #include "../Client/AppClient.h"
-#include "../Message/IMessage.h"
+#include "../Client/IObserver.h"
+#include "../Message/IMessagePack.h"
 
-class Viewer
+class Viewer : public IObserver
 {
 public:
-	Viewer() = default;
-	const std::vector<IMessage*>& GetMsgs() const;
+	Viewer(std::string url);
+	void SetUrl(std::string url);
+	const std::shared_ptr<IMessagePack>& GetMsgs() const;
 
 private:
-	void Notify(std::vector<IMessage*> msgs); // to do написать компоновщик типа AuthorizedMessagesPack	
+	virtual void Update(std::shared_ptr<Event> e) override;
+	void tryToConnect();
 
 private:
 	friend Client;
+	std::string _url;
 	Client _client;
-	std::vector<IMessage*> _msgs;
+	std::atomic<bool> is_connected;
+	std::shared_ptr<IMessagePack> _msg_pack;
 };
 

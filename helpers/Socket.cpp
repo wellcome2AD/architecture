@@ -65,8 +65,14 @@ int Socket::recv()
         if(m_recv.size() < total + CHUNK)
             m_recv.resize(m_recv.size() + CHUNK);
         cur = ::recv(m_socket, m_recv.data()+total, m_recv.size()-total-1, 0);
-        if(cur > 0)
+        if (cur > 0)
+        {
             total += cur;
+        }
+        else if (cur == SOCKET_ERROR)
+        {
+            printf("%d\n", WSAGetLastError());
+        }
     }
     while(cur > 0);
     m_recv[total] = 0;

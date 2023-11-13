@@ -67,14 +67,24 @@ void Server::run()
 		{
 			continue;
 		}
-		SocketDeserializer r(&*client);
-		IMessage* msg = nullptr;
-		r >> msg;
-		handleMessage(msg, client);
-		if (msg->GetFormat() != getReq)
+		printf("Client connected\n");
+		bool client_already_exist = false;
+		for (auto&& c : _clients)
+		{
+			if (c.get() == client.get())
+			{
+				client_already_exist = true;
+				break;
+			}
+		}
+		if (!client_already_exist)
 		{
 			_clients.push_back(client); // memorize client connection if client is not browser
 		}
+		SocketDeserializer r(client.get());
+		IMessage* msg = nullptr;
+		r >> msg;
+		handleMessage(msg, client);
 	}
 }
 
@@ -197,15 +207,9 @@ bool Server::checkRights(const std::string& userName, format msgType) const
 
 void Server::handleMessage(IMessage* m, std::shared_ptr<Socket> client)
 {
-	std::string response;
-	if (m == nullptr)
+	if (m != nullptr && m->GetFormat() == getReq)
 	{
-		return;
-	}
-
-	if (m->GetFormat() == getReq)
-	{
-		response = handleRequest(dynamic_cast<RequestMessage*>(m));
+		std::string response = handleRequest(dynamic_cast<RequestMessage*>(m));
 		if (response.size() != 0)
 		{
 			client->sendStr(response);
@@ -214,16 +218,6 @@ void Server::handleMessage(IMessage* m, std::shared_ptr<Socket> client)
 	else
 	{
 		handleAuthorizedMessage(dynamic_cast<AuthorizedMessage*>(m));
-		std::shared_ptr<MessagePack> msg_pack;
-		for (auto&& msg : *m_data)
-		{
-			msg_pack->AddMsg(std::shared_ptr<TextMessage>(new TextMessage(msg.first, std::string(), msg.second)));
-		}
-		for (auto& client : _clients)
-		{
-			SocketSerializer w(&*client);			
-			w << msg_pack;
-		}
 	}
 }
 
@@ -252,11 +246,43 @@ void Server::handleAuthorizedMessage(AuthorizedMessage* m)
 		data_to_store = fileName;
 		break;
 	}
+	default:
+		assert(0);
+		break;
 	}
 	printf("-----RECV-----\n%s %s\n--------------\n\n", m->GetUsername().c_str(), data_to_store.c_str());
 	fflush(stdout);
 	m_data->emplace(m->GetUsername(), data_to_store); // store it in the feed
 	fileAppend("resources\\STATE", m->GetUsername() + " " + data_to_store + "\r\n"); // store it in the file for subsequent runs
+	
+
+	// broadcast
+	printf("----BROADCAST----\n");
+	printf("send to all clients:\n");
+	std::shared_ptr<IMessagePack> msg_pack(new MessagePack());
+	for (auto&& msg : *m_data)
+	{
+		printf("%s %s\n", msg.first.c_str(), msg.second.c_str());
+		msg_pack->AddMsg(std::shared_ptr<TextMessage>(new TextMessage(msg.first, std::string(), msg.second)));
+	}
+	printf("\n");
+	for (auto&& client_it = _clients.begin(); client_it != _clients.end();)
+	{
+		printf("Send to client: ");
+		SocketSerializer w(client_it->get());
+		try
+		{
+			w << msg_pack;
+			++client_it;
+		}
+		catch (const std::exception& ex) // если ошибка отправки - клиент отсоединился
+		{
+			printf("ERROR: %s\nClient disconnected\n\n", ex.what());
+			client_it = _clients.erase(client_it);
+		}
+		printf("SUCCESS\n");
+	}
+	printf("-----------------\n");
 }
 
 std::string Server::handleRequest(RequestMessage* m)

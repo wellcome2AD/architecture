@@ -1,14 +1,16 @@
 #include <iostream>
+
 #include "AppViewer.h"
 
 int main()
 {
-	Viewer v;
 	std::cout << "Welcome to app Viewer!\n";
-	auto &msgs = v.GetMsgs();
-	for (auto &msg : msgs)
-	{
-		std::cout << msg.GetMsg();
-	}
+	std::cout << std::string(10, '-') << std::endl;
+	std::string url;
+	std::cout << "Input URL to connect: ";
+	std::cin >> url;
+	Viewer v(url);
+	std::cout << "MESSAGES:\n";
+	while (true);
 	return 0;
 }

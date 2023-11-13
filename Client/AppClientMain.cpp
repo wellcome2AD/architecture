@@ -1,6 +1,7 @@
 #include <vector>
 #include <fstream>
 #include <sstream>
+#include <assert.h>
 
 #include "Appclient.h"
 #include "../Message/AuthorizedMessage.h"
@@ -25,24 +26,23 @@ std::string readFromFile(const std::string& fileName) {
 	return data;
 }
 
-int main(int argc, char* argv[])
+int main()//(int argc, char* argv[])
 {
-	if (argc < 5 || split(argv[3], ":").size() != 2)
+	/*if (argc < 5 || split(argv[3], ":").size() != 2)
 	{
 		printf("USAGE: Client.exe <USER_NAME> <PASSWORD> <HOST:PORT> <MESSAGE>\n\n");
 		printf("Example: Client.exe user 1234 192.168.1.1:12345 Hello world!\n");
 		return 0;
-	}
+	}*/
 
-	// int argc = 5;
-	// char argv[][20] = {"Client.exe", "user", "1234", "192.168.1.1:12345", "Hello"};
+	std::string user_name = "alice", password = "1234", address = "127.0.0.1:8080", msg = "Hello";
 
-	std::string user_name = argv[1], password = argv[2], address = argv[3];
+	/*std::string user_name = argv[1], password = argv[2], address = argv[3];
 	std::string msg = argv[4];
 	for (int i = 5; i < argc; i++)
 	{
 		msg += std::string(" ") + argv[i];
-	}
+	}*/
 	
 	AuthorizedMessage* msg_to_send = nullptr;
 	format msg_format = fileExists(msg) ? file : text;
@@ -59,6 +59,14 @@ int main(int argc, char* argv[])
 		auto file_data = readFromFile(msg);
 		msg_to_send = new FileMessage(user_name, password, extension, file_data);
 	}
+	default:
+		assert(0);
+		break;
 	}	
-	Client().send(address, msg_to_send);
+	Client cl;
+	cl.send(address, msg_to_send);
+	while (true)
+	{
+		cl.recv();
+	}
 }

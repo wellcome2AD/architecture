@@ -52,6 +52,7 @@ inline format fromString(std::string f)
 
 class IMessage {
 public:
+	virtual ~IMessage() = default;
 	virtual format GetFormat() const = 0;
 	virtual std::string GetMsg() const = 0;
 	virtual void SetMsg(const std::string& m) = 0;

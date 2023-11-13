@@ -151,6 +151,7 @@
     <ClInclude Include="..\Deserializer\SocketDeserializer.h" />
     <ClInclude Include="..\helpers\File.h" />
     <ClInclude Include="..\helpers\Socket.h" />
+    <ClInclude Include="..\helpers\SocketException.h" />
     <ClInclude Include="..\helpers\UtilFile.h" />
     <ClInclude Include="..\helpers\UtilString.h" />
     <ClInclude Include="..\Message\AuthorizedMessage.h" />

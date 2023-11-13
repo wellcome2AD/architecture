@@ -5,6 +5,7 @@
 class RequestMessage : public IMessage {
 public:
 	RequestMessage() = default;
+	virtual ~RequestMessage() override = default;
 	RequestMessage(const std::string& message);
 
 	virtual format GetFormat() const override;

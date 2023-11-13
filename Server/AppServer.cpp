@@ -67,23 +67,17 @@ void Server::run()
 		{
 			continue;
 		}
-		printf("Client connected\n");
-		bool client_already_exist = false;
-		for (auto&& c : _clients)
-		{
-			if (c.get() == client.get())
-			{
-				client_already_exist = true;
-				break;
-			}
-		}
-		if (!client_already_exist)
-		{
-			_clients.push_back(client); // memorize client connection if client is not browser
-		}
+		printf("Client connected\n");	    
 		SocketDeserializer r(client.get());
 		IMessage* msg = nullptr;
-		r >> msg;
+		try
+		{
+			r >> msg;
+		}
+		catch (const std::exception& ex)
+		{
+			printf("ERROR: %s\n\n", ex.what());
+		}
 		handleMessage(msg, client);
 	}
 }
@@ -217,6 +211,7 @@ void Server::handleMessage(IMessage* m, std::shared_ptr<Socket> client)
 	}
 	else
 	{
+		_clients.push_back(client); // memorize client connection if client is not browser
 		handleAuthorizedMessage(dynamic_cast<AuthorizedMessage*>(m));
 	}
 }
@@ -275,9 +270,9 @@ void Server::handleAuthorizedMessage(AuthorizedMessage* m)
 			w << msg_pack;
 			++client_it;
 		}
-		catch (const std::exception& ex) // если ошибка отправки - клиент отсоединился
+		catch (const std::exception& ex)
 		{
-			printf("ERROR: %s\nClient disconnected\n\n", ex.what());
+			printf("ERROR: %s\n\n", ex.what());
 			client_it = _clients.erase(client_it);
 		}
 		printf("SUCCESS\n");

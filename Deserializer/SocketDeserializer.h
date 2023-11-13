@@ -15,6 +15,7 @@ private:
 
 public:
 	SocketDeserializer(Socket* s);
+	virtual ~SocketDeserializer() override = default;
 	virtual void Recv() override;
 	virtual char GetChar() override;
 };

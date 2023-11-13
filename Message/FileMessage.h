@@ -5,6 +5,7 @@
 class FileMessage : public AuthorizedMessage {
 public:
 	FileMessage() = default;
+	virtual ~FileMessage() override = default;
 	FileMessage(const std::string& username, const std::string& password, const std::string& extension, const std::string& message);
 	
 	virtual void Deserialize(Deserializer& d) override;

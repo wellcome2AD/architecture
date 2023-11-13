@@ -8,6 +8,7 @@ class MessagePack : public IMessagePack
 {
 public:
 	MessagePack() = default;
+	virtual ~MessagePack() override = default;
 	MessagePack(const std::vector<std::shared_ptr<IMessage>>& msgs);
 	virtual format GetFormat() const override;
 	virtual void Deserialize(Deserializer& r) override;

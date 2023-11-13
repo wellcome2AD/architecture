@@ -5,6 +5,7 @@
 class AuthorizedMessage : public IMessage {
 public:
 	AuthorizedMessage() = default;
+	virtual ~AuthorizedMessage() override = default;
 	AuthorizedMessage(const std::string& username, const std::string& password, const std::string& message);
 
 	virtual std::string GetMsg() const override;

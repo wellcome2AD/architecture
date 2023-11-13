@@ -4,6 +4,7 @@
 
 class TextMessage : public AuthorizedMessage {
 public:
+	virtual ~TextMessage() override = default;
 	using AuthorizedMessage::AuthorizedMessage;
 	virtual void Deserialize(Deserializer& d) override;
 	virtual void Serialize(Serializer& s) const override;

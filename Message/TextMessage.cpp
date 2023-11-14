@@ -4,7 +4,7 @@
 
 void TextMessage::Serialize(Serializer& s) const
 {
-	s << _username << _password << _message;
+	s << _username << _password << _message << my_endl();
 }
 
 void TextMessage::Deserialize(Deserializer& d)

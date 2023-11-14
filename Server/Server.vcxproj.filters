@@ -3,12 +3,6 @@
   <ItemGroup>
     <ClCompile Include="AppServer.cpp" />
     <ClCompile Include="AppServerMain.cpp" />
-    <ClCompile Include="..\helpers\Socket.cpp">
-      <Filter>helpers</Filter>
-    </ClCompile>
-    <ClCompile Include="helpers\SocketServer.cpp">
-      <Filter>helpers</Filter>
-    </ClCompile>
     <ClCompile Include="ResponseBuilder\ResponseBuilder.cpp">
       <Filter>response_builder</Filter>
     </ClCompile>
@@ -20,9 +14,6 @@
     </ClCompile>
     <ClCompile Include="ResponseBuilder\ServerContent.cpp">
       <Filter>response_builder</Filter>
-    </ClCompile>
-    <ClCompile Include="..\helpers\File.cpp">
-      <Filter>helpers</Filter>
     </ClCompile>
     <ClCompile Include="..\Message\MessagePack.cpp">
       <Filter>message</Filter>
@@ -39,21 +30,36 @@
     <ClCompile Include="..\Message\AuthorizedMessage.cpp">
       <Filter>message</Filter>
     </ClCompile>
+    <ClCompile Include="ClientConnection\ClientConnection.cpp">
+      <Filter>ClientConnection</Filter>
+    </ClCompile>
+    <ClCompile Include="ClientConnection\MsgQueue.cpp">
+      <Filter>ClientConnection</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Observer\ClientDisconnectEvent.cpp">
+      <Filter>observer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Observer\IObservable.cpp">
+      <Filter>observer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Observer\MessagesUpdateEvent.cpp">
+      <Filter>observer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\helpers\File.cpp">
+      <Filter>helpers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\helpers\Socket\Socket.cpp">
+      <Filter>helpers\socket</Filter>
+    </ClCompile>
+    <ClCompile Include="helpers\SocketServer.cpp">
+      <Filter>helpers\socket</Filter>
+    </ClCompile>
+    <ClCompile Include="..\helpers\Socket\SocketException.cpp">
+      <Filter>helpers\socket</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AppServer.h" />
-    <ClInclude Include="..\helpers\Socket.h">
-      <Filter>helpers</Filter>
-    </ClInclude>
-    <ClInclude Include="..\helpers\UtilFile.h">
-      <Filter>helpers</Filter>
-    </ClInclude>
-    <ClInclude Include="..\helpers\UtilString.h">
-      <Filter>helpers</Filter>
-    </ClInclude>
-    <ClInclude Include="helpers\SocketServer.h">
-      <Filter>helpers</Filter>
-    </ClInclude>
     <ClInclude Include="ResponseBuilder\IConvertableToHttp.h">
       <Filter>response_builder</Filter>
     </ClInclude>
@@ -81,9 +87,6 @@
     <ClInclude Include="..\Deserializer\SocketDeserializer.h">
       <Filter>deserializer</Filter>
     </ClInclude>
-    <ClInclude Include="..\helpers\File.h">
-      <Filter>helpers</Filter>
-    </ClInclude>
     <ClInclude Include="..\Message\IMessage.h">
       <Filter>message</Filter>
     </ClInclude>
@@ -105,14 +108,50 @@
     <ClInclude Include="..\Message\RequestMessage.h">
       <Filter>message</Filter>
     </ClInclude>
-    <ClInclude Include="..\helpers\SocketException.h">
+    <ClInclude Include="ClientConnection\ClientConnection.h">
+      <Filter>ClientConnection</Filter>
+    </ClInclude>
+    <ClInclude Include="ClientConnection\MsgQueue.h">
+      <Filter>ClientConnection</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Observer\ClientDisconnectEvent.h">
+      <Filter>observer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Observer\Event.h">
+      <Filter>observer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Observer\IObservable.h">
+      <Filter>observer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Observer\IObserver.h">
+      <Filter>observer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Observer\MessagesUpdateEvent.h">
+      <Filter>observer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\helpers\File.h">
       <Filter>helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\helpers\UtilFile.h">
+      <Filter>helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\helpers\UtilString.h">
+      <Filter>helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\helpers\Socket\SocketException.h">
+      <Filter>helpers\socket</Filter>
+    </ClInclude>
+    <ClInclude Include="..\helpers\Socket\ConnResetException.h">
+      <Filter>helpers\socket</Filter>
+    </ClInclude>
+    <ClInclude Include="..\helpers\Socket\Socket.h">
+      <Filter>helpers\socket</Filter>
+    </ClInclude>
+    <ClInclude Include="helpers\SocketServer.h">
+      <Filter>helpers\socket</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <Filter Include="helpers">
-      <UniqueIdentifier>{422afd41-4cc8-4b92-9f61-6c7f28aaa884}</UniqueIdentifier>
-    </Filter>
     <Filter Include="response_builder">
       <UniqueIdentifier>{b583cbaf-878f-4d3e-a5da-6baa5830322f}</UniqueIdentifier>
     </Filter>
@@ -124,6 +163,18 @@
     </Filter>
     <Filter Include="message">
       <UniqueIdentifier>{ab435887-e4a5-4caf-a9eb-bcd2b15ebabe}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ClientConnection">
+      <UniqueIdentifier>{f0e9be31-e4f5-4cad-84c1-a80b37a7f8ab}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="observer">
+      <UniqueIdentifier>{2f4b824f-3858-469c-83e9-72968290d8ad}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="helpers">
+      <UniqueIdentifier>{e26c3775-d26d-4855-85d8-fabd30143159}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="helpers\socket">
+      <UniqueIdentifier>{f50a6094-aecf-4392-b258-b74842f0573c}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

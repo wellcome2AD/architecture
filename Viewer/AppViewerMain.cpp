@@ -6,11 +6,12 @@ int main()
 {
 	std::cout << "Welcome to app Viewer!\n";
 	std::cout << std::string(10, '-') << std::endl;
-	std::string url;
-	std::cout << "Input URL to connect: ";
-	std::cin >> url;
-	Viewer v(url);
+	std::string ip("127.0.0.1:");
+	std::cout << "Input port to connect: " << ip;
+	std::string port;
+	std::cin >> port;
 	std::cout << "MESSAGES:\n";
-	while (true);
+	Viewer v(ip + port);
+	while (true); // TODO: перенести вечный цикл в метод класса вроде run
 	return 0;
 }

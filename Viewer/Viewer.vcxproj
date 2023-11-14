@@ -136,7 +136,9 @@
     <ClInclude Include="..\Deserializer\DeserializerOperators.h" />
     <ClInclude Include="..\Deserializer\SocketDeserializer.h" />
     <ClInclude Include="..\helpers\File.h" />
-    <ClInclude Include="..\helpers\Socket.h" />
+    <ClInclude Include="..\helpers\Socket\ConnResetException.h" />
+    <ClInclude Include="..\helpers\Socket\Socket.h" />
+    <ClInclude Include="..\helpers\Socket\SocketException.h" />
     <ClInclude Include="..\helpers\UtilFile.h" />
     <ClInclude Include="..\helpers\UtilString.h" />
     <ClInclude Include="..\Message\AuthorizedMessage.h" />
@@ -146,6 +148,11 @@
     <ClInclude Include="..\Message\MessagePack.h" />
     <ClInclude Include="..\Message\RequestMessage.h" />
     <ClInclude Include="..\Message\TextMessage.h" />
+    <ClInclude Include="..\Observer\ClientDisconnectEvent.h" />
+    <ClInclude Include="..\Observer\Event.h" />
+    <ClInclude Include="..\Observer\IObservable.h" />
+    <ClInclude Include="..\Observer\IObserver.h" />
+    <ClInclude Include="..\Observer\MessagesUpdateEvent.h" />
     <ClInclude Include="..\Serializer\Serializer.h" />
     <ClInclude Include="..\Serializer\SerializerOperators.h" />
     <ClInclude Include="..\Serializer\SocketSerializer.h" />
@@ -154,15 +161,18 @@
   <ItemGroup>
     <ClCompile Include="..\Client\AppClient.cpp" />
     <ClCompile Include="..\Client\helpers\SocketClient.cpp" />
-    <ClCompile Include="..\Client\MessagesUpdateEvent.cpp" />
     <ClCompile Include="..\Deserializer\SocketDeserializer.cpp" />
     <ClCompile Include="..\helpers\File.cpp" />
-    <ClCompile Include="..\helpers\Socket.cpp" />
+    <ClCompile Include="..\helpers\Socket\Socket.cpp" />
+    <ClCompile Include="..\helpers\Socket\SocketException.cpp" />
     <ClCompile Include="..\Message\AuthorizedMessage.cpp" />
     <ClCompile Include="..\Message\FileMessage.cpp" />
     <ClCompile Include="..\Message\MessagePack.cpp" />
     <ClCompile Include="..\Message\RequestMessage.cpp" />
     <ClCompile Include="..\Message\TextMessage.cpp" />
+    <ClCompile Include="..\Observer\ClientDisconnectEvent.cpp" />
+    <ClCompile Include="..\Observer\IObservable.cpp" />
+    <ClCompile Include="..\Observer\MessagesUpdateEvent.cpp" />
     <ClCompile Include="..\Serializer\SocketSerializer.cpp" />
     <ClCompile Include="AppViewer.cpp" />
     <ClCompile Include="AppViewerMain.cpp" />

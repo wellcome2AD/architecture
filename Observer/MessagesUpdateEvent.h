@@ -8,11 +8,7 @@
 class MessagesUpdateEvent : public Event
 {
 public:
-	MessagesUpdateEvent(std::shared_ptr<IMessagePack> msg_pack);
+	MessagesUpdateEvent() = default;
 	virtual ~MessagesUpdateEvent() override = default;
 	virtual eventType GetEventType() const override;
-	std::shared_ptr<IMessagePack> GetMsgs() const;
-
-private:
-	std::shared_ptr<IMessagePack> _msg_pack;
 };

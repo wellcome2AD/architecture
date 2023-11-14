@@ -2,8 +2,8 @@
 #include <WS2tcpip.h>
 
 #include "Socket.h"
-#include "UtilString.h"
-#include "../helpers/SocketException.h"
+#include "../UtilString.h"
+#include "ConnResetException.h"
 
 static int sSocketId = 0;
 
@@ -69,7 +69,14 @@ int Socket::recv()
 	if (recv_res == SOCKET_ERROR)
 	{
 		auto er_code = WSAGetLastError();
-		throw SocketException(er_code);
+		if (er_code == WSAECONNRESET)
+		{
+			throw ConnResetException(er_code);
+		}
+		else
+		{
+			throw SocketException(er_code);
+		}
 	}
 	m_recv.clear();
 	m_recv.resize(pack_len);
@@ -77,7 +84,14 @@ int Socket::recv()
 	if (recv_res == SOCKET_ERROR || recv_res != pack_len)
 	{
 		auto er_code = WSAGetLastError();
-		throw SocketException(er_code);
+		if (er_code == WSAECONNRESET)
+		{
+			throw ConnResetException(er_code);
+		}
+		else
+		{
+			throw SocketException(er_code);
+		}
 	}
 	return recv_res;
 }

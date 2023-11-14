@@ -2,7 +2,7 @@
 
 enum eventType
 {
-	messagesUpdate
+	messagesUpdate, clientDisconnect
 };
 
 class Event

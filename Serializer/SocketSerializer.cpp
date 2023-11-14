@@ -1,16 +1,11 @@
 #include <winsock2.h>
 
 #include "SocketSerializer.h"
-#include "../helpers/Socket.h"
+#include "../helpers/socket/Socket.h"
 #include "SerializerOperators.h"
-#include "../helpers/SocketException.h"
+#include "../helpers/socket/ConnResetException.h"
 
 SocketSerializer::SocketSerializer(Socket* s) : _socket(s) {}
-
-SocketSerializer::~SocketSerializer()
-{
-	*this << my_endl();
-}
 
 void SocketSerializer::PutChar(char c)
 {
@@ -25,7 +20,14 @@ void SocketSerializer::Flush()
 		if (return_val == SOCKET_ERROR)
 		{
 			auto er_code = WSAGetLastError();
-			throw SocketException(er_code);
+			if (er_code == WSAECONNRESET)
+			{
+				throw ConnResetException(er_code);
+			}
+			else
+			{
+				throw SocketException(er_code);
+			}
 		}
 		_buffer.clear();
 	}

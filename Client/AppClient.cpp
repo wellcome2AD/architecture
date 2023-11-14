@@ -8,10 +8,13 @@
 #include "../Deserializer/DeserializerOperators.h"
 #include "../helpers/UtilString.h"
 #include "../helpers/UtilFile.h"
-#include "Event.h"
-#include "IObserver.h"
-#include "MessagesUpdateEvent.h"
-#include "../Message/IMessagePack.h"
+#include "../helpers/socket/SocketException.h"
+#include "../Observer/Event.h"
+#include "../Observer/IObserver.h"
+#include "../Observer/MessagesUpdateEvent.h"
+#include "../Message/MessagePack.h"
+#include "../helpers/Socket/ConnResetException.h"
+#include "../Observer/ClientDisconnectEvent.h"
 
 bool Client::connect(std::string url)
 {
@@ -56,8 +59,8 @@ bool Client::send(const std::string& url, const AuthorizedMessage* msg)
 
 	if (msg)
 	{
-		SocketSerializer Serializer(_s.get());
-		Serializer << msg;
+		SocketSerializer s(_s.get());
+		s << msg << my_endl();
 		printf("------SEND-----\n%s %s\n", msg->GetUsername().c_str(), msg->GetMsg().c_str());
 		printf("data format %s, ", toString(msg->GetFormat()).c_str());
 		printf("data size %zd\n", msg->GetMsg().size());
@@ -75,51 +78,53 @@ void Client::recv()
 		return;
 	}
 
-	SocketDeserializer r(_s.get());
-	std::shared_ptr<IMessage> msg = nullptr;
+	SocketDeserializer d(_s.get());	
+	IMessage* recv_msgs = nullptr;
 	try
 	{
-		r >> msg;
+		d >> recv_msgs;
+	}
+	catch (const ConnResetException& ex)
+	{
+		printExc(ex);
+		disconnect();
+		Notify(ClientDisconnectEvent(0));
+		return;
 	}
 	catch (const std::exception& ex)
 	{
-		printf("ERROR: %s\n\n", ex.what());
+		return;
 	}
-	assert(msg);
-	auto&& msg_ptr = dynamic_cast<IMessagePack*>(msg.get());
-	assert(msg_ptr);
-	auto&& msg_pack = msg_ptr->GetMsgs();
+	assert(recv_msgs);
+	_msgs = std::shared_ptr<IMessagePack>(dynamic_cast<IMessagePack*>(recv_msgs));
+	assert(_msgs);
+	/*
 	printf("-----RECV-----\n");
-	for (auto&& msg : msg_pack)
+	for (auto&& msg : _msgs.get()->GetMsgs())
 	{
 		AuthorizedMessage* imsg = dynamic_cast<AuthorizedMessage*>(msg.get());
 		assert(imsg);
 		printf("%s : %s %s\n", imsg->GetUsername().c_str(), toString(imsg->GetFormat()).c_str(), imsg->GetMsg().c_str());
 	}
 	printf("--------------\n\n");
-	// Notify(std::shared_ptr<Event>(new MessagesUpdateEvent(msg_pack_ptr)));
+	*/
+	Notify(MessagesUpdateEvent());
 }
 
-void Client::AddObserver(std::shared_ptr<IObserver> o)
+void Client::AddObserver(IObserver* o)
 {
 	_observers.push_back(o);
 }
 
-void Client::RemoveObserver(std::shared_ptr<IObserver> o)
-{
-	for (auto&& observer_it = _observers.begin(); observer_it != _observers.end(); ++observer_it)
-	{
-		if (observer_it->get() == o.get())
-		{
-			_observers.erase(observer_it);
-		}
-	}
-}
-
-void Client::Notify(std::shared_ptr<Event> e)
+void Client::Notify(const Event& e)
 {
 	for (auto&& o : _observers)
 	{
 		o->Update(e);
 	}
+}
+
+std::shared_ptr<IMessagePack> Client::GetMsgs()
+{
+	return _msgs;
 }

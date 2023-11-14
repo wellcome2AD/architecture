@@ -4,9 +4,10 @@
 #include <string>
 #include <memory>
 
-#include "IObservable.h"
+#include "../Observer/IObservable.h"
 #include "helpers/SocketClient.h"
 #include "../Message/AuthorizedMessage.h"
+#include "../Message/IMessagePack.h"
 
 // command-line Client app that can send messages to Server.
 class Client : public IObservable
@@ -18,11 +19,16 @@ public:
 	void disconnect();
 	bool send(const std::string& url, const AuthorizedMessage* msg);
 	void recv();
-	virtual void AddObserver(std::shared_ptr<IObserver> o) override;
-	virtual void RemoveObserver(std::shared_ptr<IObserver> o) override;
-	virtual void Notify(std::shared_ptr<Event> e) override;
+
+	virtual void AddObserver(IObserver* o) override;
+	virtual void Notify(const Event& e) override;
+
+private:
+	friend class Viewer;
+	std::shared_ptr<IMessagePack> GetMsgs();
 
 private:
 	std::unique_ptr<SocketClient> _s;
-	std::vector<std::shared_ptr<IObserver>> _observers;
+	std::vector<IObserver*> _observers;
+	std::shared_ptr<IMessagePack> _msgs;
 };

@@ -24,3 +24,8 @@ std::string ServerContent::GetHttp() const
 std::multimap<std::string, std::string>::iterator ServerContent::begin() { return m_data.begin(); }
 
 std::multimap<std::string, std::string>::iterator ServerContent::end() { return m_data.end(); }
+
+bool ServerContent::empty() const
+{
+	return m_data.empty();
+}

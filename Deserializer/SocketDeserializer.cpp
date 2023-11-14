@@ -1,5 +1,5 @@
 #include "SocketDeserializer.h"
-#include "../helpers/Socket.h"
+#include "../helpers/socket/Socket.h"
 
 SocketDeserializer::SocketDeserializer(Socket* s) : _socket(s), _offset(0), _count(0) {}
 

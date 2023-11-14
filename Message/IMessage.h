@@ -56,6 +56,6 @@ public:
 	virtual format GetFormat() const = 0;
 	virtual std::string GetMsg() const = 0;
 	virtual void SetMsg(const std::string& m) = 0;
-	virtual void Deserialize(Deserializer& r) = 0;
-	virtual void Serialize(Serializer& w) const = 0;
+	virtual void Deserialize(Deserializer& d) = 0;
+	virtual void Serialize(Serializer& s) const = 0;
 };

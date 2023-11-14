@@ -1,28 +1,16 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="..\helpers\Socket.cpp">
-      <Filter>helpers</Filter>
-    </ClCompile>
-    <ClCompile Include="helpers\SocketClient.cpp">
-      <Filter>helpers</Filter>
-    </ClCompile>
     <ClCompile Include="..\Deserializer\SocketDeserializer.cpp">
       <Filter>deserializer</Filter>
     </ClCompile>
     <ClCompile Include="..\Serializer\SocketSerializer.cpp">
       <Filter>serializer</Filter>
     </ClCompile>
-    <ClCompile Include="..\helpers\File.cpp">
-      <Filter>helpers</Filter>
-    </ClCompile>
     <ClCompile Include="AppClient.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
     <ClCompile Include="AppClientMain.cpp">
-      <Filter>Исходные файлы</Filter>
-    </ClCompile>
-    <ClCompile Include="MessagesUpdateEvent.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
     <ClCompile Include="..\Message\MessagePack.cpp">
@@ -40,20 +28,29 @@
     <ClCompile Include="..\Message\AuthorizedMessage.cpp">
       <Filter>message</Filter>
     </ClCompile>
+    <ClCompile Include="..\Observer\ClientDisconnectEvent.cpp">
+      <Filter>observer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Observer\IObservable.cpp">
+      <Filter>observer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Observer\MessagesUpdateEvent.cpp">
+      <Filter>observer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\helpers\File.cpp">
+      <Filter>helpers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\helpers\Socket\SocketException.cpp">
+      <Filter>helpers\socket</Filter>
+    </ClCompile>
+    <ClCompile Include="..\helpers\Socket\Socket.cpp">
+      <Filter>helpers\socket</Filter>
+    </ClCompile>
+    <ClCompile Include="helpers\SocketClient.cpp">
+      <Filter>helpers\socket</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\helpers\Socket.h">
-      <Filter>helpers</Filter>
-    </ClInclude>
-    <ClInclude Include="..\helpers\UtilFile.h">
-      <Filter>helpers</Filter>
-    </ClInclude>
-    <ClInclude Include="..\helpers\UtilString.h">
-      <Filter>helpers</Filter>
-    </ClInclude>
-    <ClInclude Include="helpers\SocketClient.h">
-      <Filter>helpers</Filter>
-    </ClInclude>
     <ClInclude Include="..\Deserializer\Deserializer.h">
       <Filter>deserializer</Filter>
     </ClInclude>
@@ -71,9 +68,6 @@
     </ClInclude>
     <ClInclude Include="..\Serializer\SocketSerializer.h">
       <Filter>serializer</Filter>
-    </ClInclude>
-    <ClInclude Include="..\helpers\File.h">
-      <Filter>helpers</Filter>
     </ClInclude>
     <ClInclude Include="AppClient.h">
       <Filter>Файлы заголовков</Filter>
@@ -111,14 +105,44 @@
     <ClInclude Include="..\Message\RequestMessage.h">
       <Filter>message</Filter>
     </ClInclude>
-    <ClInclude Include="..\helpers\SocketException.h">
+    <ClInclude Include="..\Observer\ClientDisconnectEvent.h">
+      <Filter>observer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Observer\Event.h">
+      <Filter>observer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Observer\IObservable.h">
+      <Filter>observer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Observer\IObserver.h">
+      <Filter>observer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Observer\MessagesUpdateEvent.h">
+      <Filter>observer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\helpers\File.h">
       <Filter>helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\helpers\UtilFile.h">
+      <Filter>helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\helpers\UtilString.h">
+      <Filter>helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\helpers\Socket\SocketException.h">
+      <Filter>helpers\socket</Filter>
+    </ClInclude>
+    <ClInclude Include="..\helpers\Socket\ConnResetException.h">
+      <Filter>helpers\socket</Filter>
+    </ClInclude>
+    <ClInclude Include="..\helpers\Socket\Socket.h">
+      <Filter>helpers\socket</Filter>
+    </ClInclude>
+    <ClInclude Include="helpers\SocketClient.h">
+      <Filter>helpers\socket</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <Filter Include="helpers">
-      <UniqueIdentifier>{a5286c9e-372d-4050-9d1c-7a79cab90d92}</UniqueIdentifier>
-    </Filter>
     <Filter Include="message">
       <UniqueIdentifier>{ed8735a9-c799-4290-b605-b27cf119fbae}</UniqueIdentifier>
     </Filter>
@@ -133,6 +157,15 @@
     </Filter>
     <Filter Include="Файлы заголовков">
       <UniqueIdentifier>{06cb5db8-c7ea-42f4-b101-8831cd84053a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="observer">
+      <UniqueIdentifier>{2174c7b6-6dc2-4711-a466-6b5f84588053}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="helpers">
+      <UniqueIdentifier>{13e944dd-5e88-475f-8ff4-fef3d72fb456}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="helpers\socket">
+      <UniqueIdentifier>{818a60c1-7703-407e-a2a5-69dfce9d11cf}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

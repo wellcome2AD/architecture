@@ -8,5 +8,5 @@ class IObserver
 {
 public:
 	virtual ~IObserver() = default;
-	virtual void Update(std::shared_ptr<Event> e) = 0;
+	virtual void Update(const Event& e) = 0;
 };

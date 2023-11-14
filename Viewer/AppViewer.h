@@ -4,7 +4,7 @@
 #include <memory>
 
 #include "../Client/AppClient.h"
-#include "../Client/IObserver.h"
+#include "../Observer/IObserver.h"
 #include "../Message/IMessagePack.h"
 
 class Viewer : public IObserver
@@ -15,7 +15,7 @@ public:
 	const std::shared_ptr<IMessagePack>& GetMsgs() const;
 
 private:
-	virtual void Update(std::shared_ptr<Event> e) override;
+	virtual void Update(const Event& e) override;
 	void tryToConnect();
 
 private:
@@ -25,4 +25,3 @@ private:
 	std::atomic<bool> is_connected;
 	std::shared_ptr<IMessagePack> _msg_pack;
 };
-

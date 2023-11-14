@@ -1,7 +1,9 @@
 #pragma once
-#include "../../helpers/Socket.h"
+
 #include <string>
 #include <vector>
+
+#include "../../helpers/Socket/Socket.h"
 
 // client-side socket class. Can connect to server-side socket.
 class SocketClient : public Socket

@@ -8,15 +8,15 @@ FileMessage::FileMessage(const std::string& username, const std::string& passwor
 	  _extension(extension)
 {}
 
-void FileMessage::Deserialize(Deserializer& r)
+void FileMessage::Deserialize(Deserializer& d)
 {
-	r >> _username >> _password >> _extension >> _message;
+	d >> _username >> _password >> _extension >> _message;
 }
 
-void FileMessage::Serialize(Serializer& w) const
+void FileMessage::Serialize(Serializer& s) const
 {
 
-	w << _username << _password << _extension << _message;
+	s << _username << _password << _extension << _message << my_endl();
 }
 
 format FileMessage::GetFormat() const { return file; }

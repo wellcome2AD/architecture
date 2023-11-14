@@ -12,14 +12,14 @@ std::string MessagePack::GetMsg() const { return std::string(); }
 
 void MessagePack::SetMsg(const std::string& m) {}
 
-void MessagePack::Deserialize(Deserializer& r)
+void MessagePack::Deserialize(Deserializer& d)
 {
-    r >> _msgs;
+    d >> _msgs;
 }
 
-void MessagePack::Serialize(Serializer& w) const
+void MessagePack::Serialize(Serializer& s) const
 {
-    w << _msgs;
+    s << _msgs << my_endl();
 }
 
 void MessagePack::AddMsg(std::shared_ptr<IMessage> msg)

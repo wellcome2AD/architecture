@@ -17,6 +17,7 @@ public:
 
 	std::multimap<std::string, std::string>::iterator begin();
 	std::multimap<std::string, std::string>::iterator end();
+	bool empty() const;
 
 private:
 	std::multimap<std::string, std::string> m_data; // representation of uploaded data

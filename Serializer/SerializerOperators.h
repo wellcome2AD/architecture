@@ -55,6 +55,12 @@ inline Serializer& operator<<(Serializer& s, const IMessage* m)
 	return s;
 }
 
+inline Serializer& operator<<(Serializer& s, const IMessage& m)
+{
+	s << &m;
+	return s;
+}
+
 template <class T>
 inline Serializer& operator<<(Serializer& s, const std::vector<T>& v)
 {

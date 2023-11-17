@@ -150,7 +150,24 @@ void Viewer::Update(const Event& e)
 	case messagesUpdate:
 	{
 		std::lock_guard<std::mutex> lg(_msg_mutex);
-		_msg_pack = _client.getMsgs();
+		auto &&msgs = static_cast<const MessagesUpdateEvent&>(e).GetMsg();
+		switch (msgs.GetFormat())
+		{
+			case text:
+			{
+				auto &&txt_msg = static_cast<const TextMessage&>(msgs);
+				_msg_pack.AddMsg(txt_msg);
+				break;
+			}
+			case msgPack:
+			{
+				for(auto &&m : msgs.GetMsgs())
+				{
+					_msg_pack.AddMsg(m);
+				}
+				break;
+			}
+		}
 		break;
 	}
 	case connReset:

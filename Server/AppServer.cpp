@@ -21,7 +21,6 @@
 #include "../Message/RequestMessage.h"
 #include "../Message/MessagePack.h"
 #include "../helpers/File.h"
-#include "ClientConnection/MsgQueue.h"
 #include "ResponseBuilder/ResponseBuilder.h"
 #include "../Observer/MessagesUpdateEvent.h"
 #include "../Observer/ConnResetEvent.h"
@@ -81,10 +80,11 @@ void Server::run()
 			printf("--------------\n");
 			auto&& cl_con = std::shared_ptr<ClientConnection>(new ClientConnection(client, _clients.size()));
 			cl_con->AddObserver(this);
+			std::lock_guard clients_lg(_clients_mutex);
 			_clients.push_back(cl_con);
 
 			printf("send to client %d:\n", cl_con->GetNumber());
-			std::lock_guard lg(m_data_mutex);
+			std::lock_guard mdata_lg(m_data_mutex);
 			MessagePack msg_pack = convertSContToMsgPack();
 			cl_con->SendMsg(msg_pack);
 			printf("--------------\n");
@@ -236,6 +236,16 @@ void Server::handleMessage(const IMessage* m, ClientConnection& client)
 		}
 		break;
 	}
+	case msgPack:
+	{
+		auto&& msg_pack = static_cast<const IMessagePack*>(m);
+		for (auto&& imsg : msg_pack->GetMsgs())
+		{
+			auto&& author_msg = static_cast<AuthorizedMessage*>(imsg.get());
+			handleAuthorizedMessage(author_msg);
+		}
+		break;
+	}
 	case text:
 	case file:
 	{
@@ -281,7 +291,9 @@ void Server::handleAuthorizedMessage(const AuthorizedMessage* m)
 	fileAppend("resources\\STATE", m->GetUsername() + " " + data_to_store + "\r\n"); // store it in the file for subsequent runs
 	printf("\n--------------\n");
 	printf("send to all clients:\n");
-	MessagePack msg_pack = convertSContToMsgPack();	
+	// MessagePack msg_pack = convertSContToMsgPack();	
+	MessagePack msg_pack;
+	msg_pack.AddMsg(std::shared_ptr<TextMessage>(new TextMessage(m->GetUsername(), std::string(), data_to_store.data())));
 	broadcast(msg_pack);
 }
 
@@ -323,7 +335,7 @@ void Server::broadcast(const IMessagePack& msg_pack)
 {
 	printf("----BROADCAST----\n");
 	auto&& predicate = [&msg_pack](const std::shared_ptr<ClientConnection>& c) {
-		printf("send to client %d\n", c->GetNumber());
+		printf("send to client %d new message\n", c->GetNumber());
 		try
 		{
 			c->SendMsg(msg_pack);
@@ -340,6 +352,7 @@ void Server::broadcast(const IMessagePack& msg_pack)
 		printf("SUCCESS\n");
 		return false;
 	};
+	std::lock_guard lg(_clients_mutex);
 	_clients.erase(std::remove_if(_clients.begin(), _clients.end(), predicate), _clients.end());
 	printf("-----------------\n");
 }
@@ -361,24 +374,55 @@ void Server::Update(const Event& e)
 	{
 	case connReset:
 	{
-		auto &&event = static_cast<const ConnResetEvent&>(e);
-		auto &&client_number = event.GetNumber();
+		auto&& event = static_cast<const ConnResetEvent&>(e);
+		auto&& client_number = event.GetNumber();
 		auto predicate = [&](std::shared_ptr<ClientConnection> c) { return c->GetNumber() == client_number; };
+		std::lock_guard lg(_clients_mutex);
 		_clients.erase(std::remove_if(_clients.begin(), _clients.end(), predicate), _clients.end());
 		break;
 	}
 	case messagesUpdate:
 	{
-		if (!MsgQueue::GetInstance().IsEmpty())
+		// auto&& msg = MsgQueue::GetInstance().Pop();
+		auto&& event = static_cast<const MessagesUpdateEvent&>(e);
+		auto&& client_num = event.GetClientNum();
+		auto&& msg = event.GetMsg();
+		printf("-----RECV-----\n");
+		printf("receive from client %d:\n", client_num);
+		switch (msg.GetFormat())
 		{
-			auto&& msg = MsgQueue::GetInstance().Pop();
-			printf("-----RECV-----\n");
-			printf("receive from client %d:\n", msg->GetNumber());
-			auto&& imsg = static_cast<const AuthorizedMessage*>(msg->GetMsg());
-			printf("%s : %s %s\n", imsg->GetUsername().c_str(), toString(imsg->GetFormat()).c_str(), imsg->GetMsg().c_str());
-			printf("--------------\n\n");
-			handleMessage(msg->GetMsg(), *(_clients[msg->GetNumber()]));
+		case msgPack:
+		{
+			auto&& msg_pack = static_cast<const IMessagePack&>(msg);
+			for (auto&& imsg : msg_pack.GetMsgs())
+			{
+				auto&& author_msg = static_cast<AuthorizedMessage*>(imsg.get());
+				printf("%s : %s %s\n", author_msg->GetUsername().c_str(), toString(author_msg->GetFormat()).c_str(), author_msg->GetMsg().c_str());
+			}
+			break;
 		}
+		case getReq:
+		{
+			auto&& author_msg = static_cast<const AuthorizedMessage&>(msg);
+			printf("%s : %s %s\n", author_msg.GetUsername().c_str(), toString(author_msg.GetFormat()).c_str(), author_msg.GetMsg().c_str());
+			printf("--------------\n\n");
+			break;
+		}
+		case file:
+		case text:
+		{
+			auto&& author_msg = static_cast<const AuthorizedMessage&>(msg);
+			printf("%s : %s %s\n", author_msg.GetUsername().c_str(), toString(author_msg.GetFormat()).c_str(), author_msg.GetMsg().c_str());
+			printf("--------------\n\n");
+			break;
+		}
+		default:
+		{
+			assert(0);
+			return;
+		}
+		}		
+		handleMessage(&msg, *(_clients[client_num]));
 		break;
 	}
 	default:

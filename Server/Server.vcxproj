@@ -151,7 +151,6 @@
     <ClCompile Include="AppServer.cpp" />
     <ClCompile Include="AppServerMain.cpp" />
     <ClCompile Include="ClientConnection\ClientConnection.cpp" />
-    <ClCompile Include="ClientConnection\MsgQueue.cpp" />
     <ClCompile Include="helpers\SocketServer.cpp" />
     <ClCompile Include="ResponseBuilder\ResponseBuilder.cpp" />
     <ClCompile Include="ResponseBuilder\ServerContent.cpp" />
@@ -183,7 +182,6 @@
     <ClInclude Include="..\Serializer\SocketSerializer.h" />
     <ClInclude Include="AppServer.h" />
     <ClInclude Include="ClientConnection\ClientConnection.h" />
-    <ClInclude Include="ClientConnection\MsgQueue.h" />
     <ClInclude Include="helpers\SocketServer.h" />
     <ClInclude Include="ResponseBuilder\IConvertableToHttp.h" />
     <ClInclude Include="ResponseBuilder\ResponseBuilder.h" />

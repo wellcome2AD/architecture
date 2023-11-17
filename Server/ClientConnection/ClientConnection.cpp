@@ -6,7 +6,6 @@
 #include "../../Serializer/SocketSerializer.h"
 #include "../../Serializer/SerializerOperators.h"
 #include "../../Message/IMessage.h"
-#include "MsgQueue.h"
 #include "../../Observer/IObserver.h"
 #include "../../Observer/MessagesUpdateEvent.h"
 #include "../../Observer/ConnResetEvent.h"
@@ -23,8 +22,7 @@ ClientConnection::ClientConnection(std::shared_ptr<Socket> client, int number) :
 			try
 			{
 				r >> msg;
-				MsgQueue::GetInstance().Push(std::shared_ptr<Message>(new Message(_number, msg)));
-				Notify(MessagesUpdateEvent());
+				Notify(MessagesUpdateEvent(number, *msg));
 			}
 			catch (const ConnResetException& ex)
 			{

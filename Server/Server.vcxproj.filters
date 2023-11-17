@@ -33,9 +33,6 @@
     <ClCompile Include="ClientConnection\ClientConnection.cpp">
       <Filter>ClientConnection</Filter>
     </ClCompile>
-    <ClCompile Include="ClientConnection\MsgQueue.cpp">
-      <Filter>ClientConnection</Filter>
-    </ClCompile>
     <ClCompile Include="..\Observer\IObservable.cpp">
       <Filter>observer</Filter>
     </ClCompile>
@@ -109,9 +106,6 @@
       <Filter>message</Filter>
     </ClInclude>
     <ClInclude Include="ClientConnection\ClientConnection.h">
-      <Filter>ClientConnection</Filter>
-    </ClInclude>
-    <ClInclude Include="ClientConnection\MsgQueue.h">
       <Filter>ClientConnection</Filter>
     </ClInclude>
     <ClInclude Include="..\Observer\Event.h">

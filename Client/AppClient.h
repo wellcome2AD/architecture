@@ -18,14 +18,14 @@ public:
 	bool connect(std::string url);
 	void disconnect();
 	bool send(const std::string& url, const AuthorizedMessage* msg);
-	void recv();
+	std::shared_ptr<IMessagePack> recv();
+	std::shared_ptr<IMessagePack> getMsgs() const;
 
 	virtual void AddObserver(IObserver* o) override;
 	virtual void Notify(const Event& e) override;
 
 private:
 	friend class Viewer;
-	std::shared_ptr<IMessagePack> GetMsgs();
 
 private:
 	std::unique_ptr<SocketClient> _s;

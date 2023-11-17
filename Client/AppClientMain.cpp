@@ -1,7 +1,6 @@
 #include <vector>
-#include <fstream>
-#include <sstream>
 #include <assert.h>
+#include <iostream>
 
 #include "Appclient.h"
 #include "../Message/AuthorizedMessage.h"
@@ -10,23 +9,7 @@
 #include "../helpers/UtilFile.h"
 #include "../helpers/UtilString.h"
 
-std::string readFromFile(const std::string& fileName) {
-	std::string data;
-	if (fileExists(fileName)) {
-		std::ifstream file(fileName, std::ios::binary);
-		if (file.is_open())
-		{
-			data = std::string(std::istreambuf_iterator<char>(file), {});
-		}
-		else
-		{
-			printf("Error\n");
-		}
-	}
-	return data;
-}
-
-int main(int argc, char* argv[])
+/*int main(int argc, char* argv[])
 {
 	if (argc < 5 || split(argv[3], ":").size() != 2)
 	{
@@ -63,9 +46,9 @@ int main(int argc, char* argv[])
 	}
 	Client cl;
 	cl.send(address, msg_to_send);
-}
+}*/
 
-/*int main()
+int main()
 {	
 	// посылка этого сообщения на 127.0.0.1:8080
 	std::string user_name = "alice", password = "1234", address = "127.0.0.1:8080", msg = "Hello";	
@@ -90,8 +73,15 @@ int main(int argc, char* argv[])
 	}	
 	Client cl;
 	cl.send(address, msg_to_send);
-	while (true)
+	auto msgs = cl.recv();
+	if (msgs)
 	{
-		cl.recv();
+		std::cout << std::string(14, '-') << std::endl;
+		for (auto m : msgs->GetMsgs())
+		{
+			auto&& authorized_m = static_cast<AuthorizedMessage*>(m.get());
+			std::cout << authorized_m->GetUsername() << ": " << toString(authorized_m->GetFormat()) << " " << authorized_m->GetMsg() << std::endl;
+		}
+		std::cout << std::string(14, '-') << std::endl;
 	}
-}*/
+}

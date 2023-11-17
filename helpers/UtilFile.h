@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include <fstream>
 #include <vector>
 #include <stdio.h>
 #include <io.h>
@@ -132,4 +133,20 @@ inline static std::string createUniqueFileName(const char* extension)
         res = randomString(8);
     }
     return res + std::string(extension);
+}
+
+inline std::string readFromFile(const std::string& fileName) {
+    std::string data;
+    if (fileExists(fileName)) {
+        std::ifstream file(fileName, std::ios::binary);
+        if (file.is_open())
+        {
+            data = std::string(std::istreambuf_iterator<char>(file), {});
+        }
+        else
+        {
+            printf("Error\n");
+        }
+    }
+    return data;
 }

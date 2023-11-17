@@ -36,9 +36,6 @@
     <ClCompile Include="ClientConnection\MsgQueue.cpp">
       <Filter>ClientConnection</Filter>
     </ClCompile>
-    <ClCompile Include="..\Observer\ClientDisconnectEvent.cpp">
-      <Filter>observer</Filter>
-    </ClCompile>
     <ClCompile Include="..\Observer\IObservable.cpp">
       <Filter>observer</Filter>
     </ClCompile>
@@ -56,6 +53,9 @@
     </ClCompile>
     <ClCompile Include="..\helpers\Socket\SocketException.cpp">
       <Filter>helpers\socket</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Observer\ConnResetEvent.cpp">
+      <Filter>observer</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -114,9 +114,6 @@
     <ClInclude Include="ClientConnection\MsgQueue.h">
       <Filter>ClientConnection</Filter>
     </ClInclude>
-    <ClInclude Include="..\Observer\ClientDisconnectEvent.h">
-      <Filter>observer</Filter>
-    </ClInclude>
     <ClInclude Include="..\Observer\Event.h">
       <Filter>observer</Filter>
     </ClInclude>
@@ -149,6 +146,9 @@
     </ClInclude>
     <ClInclude Include="helpers\SocketServer.h">
       <Filter>helpers\socket</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Observer\ConnResetEvent.h">
+      <Filter>observer</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

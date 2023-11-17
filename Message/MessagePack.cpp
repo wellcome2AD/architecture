@@ -19,7 +19,7 @@ void MessagePack::Deserialize(Deserializer& d)
 
 void MessagePack::Serialize(Serializer& s) const
 {
-    s << _msgs << my_endl();
+    s << _msgs;
 }
 
 void MessagePack::AddMsg(std::shared_ptr<IMessage> msg)

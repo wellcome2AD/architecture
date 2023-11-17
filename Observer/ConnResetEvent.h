@@ -5,14 +5,14 @@
 #include "Event.h"
 #include "../Message/IMessagePack.h"
 
-class ClientDisconnectEvent : public Event
+class ConnResetEvent : public Event
 {
 public:
-	ClientDisconnectEvent(int client_num);
-	virtual ~ClientDisconnectEvent() override = default;
+	ConnResetEvent(int client_num);
+	virtual ~ConnResetEvent() override = default;
 	virtual eventType GetEventType() const override;
 	int GetNumber() const;
 
 private:
-	int _client_num;
+	int _con_num;
 };

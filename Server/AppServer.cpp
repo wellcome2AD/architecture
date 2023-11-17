@@ -24,7 +24,7 @@
 #include "ClientConnection/MsgQueue.h"
 #include "ResponseBuilder/ResponseBuilder.h"
 #include "../Observer/MessagesUpdateEvent.h"
-#include "../Observer/ClientDisconnectEvent.h"
+#include "../Observer/ConnResetEvent.h"
 #include "../helpers/Socket/ConnResetException.h"
 
 Server::~Server()
@@ -120,7 +120,7 @@ void Server::synchState()
 			if (!line.empty())
 			{
 				auto temp = split(line, " "); // split by space on user and message
-				m_data->emplace(temp[0], temp[1]);
+				m_data->push_back(std::make_pair<std::string, std::string>(temp[0].data(), temp[0].data()));
 			}
 		}
 		fclose(state_file);
@@ -277,7 +277,7 @@ void Server::handleAuthorizedMessage(const AuthorizedMessage* m)
 		break;
 	}
 	std::lock_guard lg(m_data_mutex);
-	m_data->emplace(m->GetUsername(), data_to_store); // store it in the feed
+	m_data->push_back(std::make_pair<std::string, std::string>(m->GetUsername(), data_to_store.data())); // store it in the feed
 	fileAppend("resources\\STATE", m->GetUsername() + " " + data_to_store + "\r\n"); // store it in the file for subsequent runs
 	printf("\n--------------\n");
 	printf("send to all clients:\n");
@@ -359,9 +359,9 @@ void Server::Update(const Event& e)
 {
 	switch (e.GetEventType())
 	{
-	case clientDisconnect:
+	case connReset:
 	{
-		auto &&event = static_cast<const ClientDisconnectEvent&>(e);
+		auto &&event = static_cast<const ConnResetEvent&>(e);
 		auto &&client_number = event.GetNumber();
 		auto predicate = [&](std::shared_ptr<ClientConnection> c) { return c->GetNumber() == client_number; };
 		_clients.erase(std::remove_if(_clients.begin(), _clients.end(), predicate), _clients.end());

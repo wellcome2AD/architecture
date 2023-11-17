@@ -1,6 +1,6 @@
 #pragma once
 
-#include <map>
+#include <vector>
 
 #include "IConvertableToHttp.h"
 
@@ -9,18 +9,17 @@ class ServerContent : public IConvertableToHttp
 public:
 	virtual std::string GetHttp() const override;
 
-	template <class... Args>
-	std::multimap<std::string, std::string>::iterator emplace(Args&&... args)
+	void push_back(std::pair<std::string, std::string> v)
 	{
-		return m_data.emplace((std::forward<Args>(args))...);
+		m_data.push_back(v);
 	}
 
-	std::multimap<std::string, std::string>::iterator begin();
-	std::multimap<std::string, std::string>::iterator end();
+	std::vector<std::pair<std::string, std::string>>::iterator begin();
+	std::vector<std::pair<std::string, std::string>>::iterator end();
 	bool empty() const;
 
 private:
-	std::multimap<std::string, std::string> m_data; // representation of uploaded data
+	std::vector<std::pair<std::string, std::string>> m_data; // representation of uploaded data
 	const char* _body_begin = "<!DOCTYPE html>"\
 							  "<html>" \
 							  "<head>" \

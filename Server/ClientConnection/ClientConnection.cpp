@@ -9,7 +9,7 @@
 #include "MsgQueue.h"
 #include "../../Observer/IObserver.h"
 #include "../../Observer/MessagesUpdateEvent.h"
-#include "../../Observer/ClientDisconnectEvent.h"
+#include "../../Observer/ConnResetEvent.h"
 #include "../../helpers/Socket/ConnResetException.h"
 
 ClientConnection::ClientConnection(std::shared_ptr<Socket> client, int number) : _client(client), _number(number)
@@ -30,7 +30,7 @@ ClientConnection::ClientConnection(std::shared_ptr<Socket> client, int number) :
 			{
 				printf("Client %d: ", _number);
 				printExc(ex);
-				Notify(ClientDisconnectEvent(_number));
+				Notify(ConnResetEvent(_number));
 				break;
 			}
 			catch (const std::exception& ex)
@@ -62,7 +62,7 @@ void ClientConnection::SendMsg(const IMessage& msg)
 	{
 		printf("Client %d: ", _number);
 		printExc(ex);
-		Notify(ClientDisconnectEvent(_number));		
+		Notify(ConnResetEvent(_number));
 	}
 	catch (const std::exception& ex)
 	{

@@ -14,7 +14,7 @@
 #include "../Observer/MessagesUpdateEvent.h"
 #include "../Message/MessagePack.h"
 #include "../helpers/Socket/ConnResetException.h"
-#include "../Observer/ClientDisconnectEvent.h"
+#include "../Observer/ConnResetEvent.h"
 
 bool Client::connect(std::string url)
 {
@@ -61,21 +61,23 @@ bool Client::send(const std::string& url, const AuthorizedMessage* msg)
 	{
 		SocketSerializer s(_s.get());
 		s << msg << my_endl();
+		/*
 		printf("------SEND-----\n%s %s\n", msg->GetUsername().c_str(), msg->GetMsg().c_str());
 		printf("data format %s, ", toString(msg->GetFormat()).c_str());
 		printf("data size %zd\n", msg->GetMsg().size());
 		printf("--------------\n\n");
+		*/
 		return true;
 	}
 	return false;
 }
 
-void Client::recv()
+std::shared_ptr<IMessagePack> Client::recv()
 {
 	if (!_s)
 	{
 		printf("Socket disconnected\n");
-		return;
+		return _msgs;
 	}
 
 	SocketDeserializer d(_s.get());	
@@ -88,12 +90,12 @@ void Client::recv()
 	{
 		printExc(ex);
 		disconnect();
-		Notify(ClientDisconnectEvent(0));
-		return;
+		Notify(ConnResetEvent(0));
+		return _msgs;
 	}
 	catch (const std::exception& ex)
 	{
-		return;
+		return _msgs;
 	}
 	assert(recv_msgs);
 	_msgs = std::shared_ptr<IMessagePack>(dynamic_cast<IMessagePack*>(recv_msgs));
@@ -109,6 +111,12 @@ void Client::recv()
 	printf("--------------\n\n");
 	*/
 	Notify(MessagesUpdateEvent());
+	return _msgs;
+}
+
+std::shared_ptr<IMessagePack> Client::getMsgs() const
+{
+	return _msgs;
 }
 
 void Client::AddObserver(IObserver* o)
@@ -122,9 +130,4 @@ void Client::Notify(const Event& e)
 	{
 		o->Update(e);
 	}
-}
-
-std::shared_ptr<IMessagePack> Client::GetMsgs()
-{
-	return _msgs;
 }

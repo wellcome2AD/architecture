@@ -21,9 +21,9 @@ std::string ServerContent::GetHttp() const
     return payload + _end;
 }
 
-std::multimap<std::string, std::string>::iterator ServerContent::begin() { return m_data.begin(); }
+std::vector<std::pair<std::string, std::string>>::iterator ServerContent::begin() { return m_data.begin(); }
 
-std::multimap<std::string, std::string>::iterator ServerContent::end() { return m_data.end(); }
+std::vector<std::pair<std::string, std::string>>::iterator ServerContent::end() { return m_data.end(); }
 
 bool ServerContent::empty() const
 {

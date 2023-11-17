@@ -75,9 +75,6 @@
     <ClInclude Include="..\Message\RequestMessage.h">
       <Filter>message</Filter>
     </ClInclude>
-    <ClInclude Include="..\Observer\ClientDisconnectEvent.h">
-      <Filter>observer</Filter>
-    </ClInclude>
     <ClInclude Include="..\Observer\Event.h">
       <Filter>observer</Filter>
     </ClInclude>
@@ -111,6 +108,9 @@
     <ClInclude Include="..\Client\helpers\SocketClient.h">
       <Filter>helpers\socket</Filter>
     </ClInclude>
+    <ClInclude Include="..\Observer\ConnResetEvent.h">
+      <Filter>observer</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AppViewer.cpp">
@@ -143,9 +143,6 @@
     <ClCompile Include="..\Message\AuthorizedMessage.cpp">
       <Filter>message</Filter>
     </ClCompile>
-    <ClCompile Include="..\Observer\ClientDisconnectEvent.cpp">
-      <Filter>observer</Filter>
-    </ClCompile>
     <ClCompile Include="..\Observer\IObservable.cpp">
       <Filter>observer</Filter>
     </ClCompile>
@@ -163,6 +160,9 @@
     </ClCompile>
     <ClCompile Include="..\Client\helpers\SocketClient.cpp">
       <Filter>helpers\socket</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Observer\ConnResetEvent.cpp">
+      <Filter>observer</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -4,6 +4,7 @@
 #include <string>
 #include <memory>
 #include <mutex>
+#include <map>
 
 #include "helpers/SocketServer.h"
 #include "ResponseBuilder/ServerContent.h"

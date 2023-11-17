@@ -144,7 +144,7 @@
     <ClCompile Include="..\Message\MessagePack.cpp" />
     <ClCompile Include="..\Message\RequestMessage.cpp" />
     <ClCompile Include="..\Message\TextMessage.cpp" />
-    <ClCompile Include="..\Observer\ClientDisconnectEvent.cpp" />
+    <ClCompile Include="..\Observer\ConnResetEvent.cpp" />
     <ClCompile Include="..\Observer\IObservable.cpp" />
     <ClCompile Include="..\Observer\MessagesUpdateEvent.cpp" />
     <ClCompile Include="..\Serializer\SocketSerializer.cpp" />
@@ -173,7 +173,7 @@
     <ClInclude Include="..\Message\MessagePack.h" />
     <ClInclude Include="..\Message\RequestMessage.h" />
     <ClInclude Include="..\Message\TextMessage.h" />
-    <ClInclude Include="..\Observer\ClientDisconnectEvent.h" />
+    <ClInclude Include="..\Observer\ConnResetEvent.h" />
     <ClInclude Include="..\Observer\Event.h" />
     <ClInclude Include="..\Observer\IObservable.h" />
     <ClInclude Include="..\Observer\IObserver.h" />

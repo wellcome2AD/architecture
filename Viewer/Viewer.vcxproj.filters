@@ -1,0 +1,168 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Исходные файлы">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Файлы заголовков">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="Файлы ресурсов">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="serializer">
+      <UniqueIdentifier>{fa27ba11-b6ba-4992-bcc7-596ebf54ab6e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="deserializer">
+      <UniqueIdentifier>{e735d43a-b996-4eb9-94be-b17f3fca3b65}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="message">
+      <UniqueIdentifier>{44f50226-1b69-444d-bedc-761586be70e4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="observer">
+      <UniqueIdentifier>{aecd3892-cd13-4cac-88d8-0d8b0e796771}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="helpers">
+      <UniqueIdentifier>{217fb502-d328-442b-ad88-2d1b90948698}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="helpers\socket">
+      <UniqueIdentifier>{fdd2a8ba-9750-4be4-9dc6-b9284cfddd33}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="AppViewer.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Serializer\Serializer.h">
+      <Filter>serializer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Serializer\SerializerOperators.h">
+      <Filter>serializer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Serializer\SocketSerializer.h">
+      <Filter>serializer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Deserializer\Deserializer.h">
+      <Filter>deserializer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Deserializer\DeserializerOperators.h">
+      <Filter>deserializer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Deserializer\SocketDeserializer.h">
+      <Filter>deserializer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Message\IMessage.h">
+      <Filter>message</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Message\FileMessage.h">
+      <Filter>message</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Message\TextMessage.h">
+      <Filter>message</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Message\IMessagePack.h">
+      <Filter>message</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Message\MessagePack.h">
+      <Filter>message</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Message\AuthorizedMessage.h">
+      <Filter>message</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Message\RequestMessage.h">
+      <Filter>message</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Observer\Event.h">
+      <Filter>observer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Observer\IObservable.h">
+      <Filter>observer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Observer\IObserver.h">
+      <Filter>observer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Observer\MessagesUpdateEvent.h">
+      <Filter>observer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\helpers\File.h">
+      <Filter>helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\helpers\UtilFile.h">
+      <Filter>helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\helpers\UtilString.h">
+      <Filter>helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\helpers\Socket\SocketException.h">
+      <Filter>helpers\socket</Filter>
+    </ClInclude>
+    <ClInclude Include="..\helpers\Socket\ConnResetException.h">
+      <Filter>helpers\socket</Filter>
+    </ClInclude>
+    <ClInclude Include="..\helpers\Socket\Socket.h">
+      <Filter>helpers\socket</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Client\helpers\SocketClient.h">
+      <Filter>helpers\socket</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Observer\ConnResetEvent.h">
+      <Filter>observer</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="AppViewer.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="AppViewerMain.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Client\AppClient.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Serializer\SocketSerializer.cpp">
+      <Filter>serializer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Deserializer\SocketDeserializer.cpp">
+      <Filter>deserializer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Message\MessagePack.cpp">
+      <Filter>message</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Message\FileMessage.cpp">
+      <Filter>message</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Message\RequestMessage.cpp">
+      <Filter>message</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Message\TextMessage.cpp">
+      <Filter>message</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Message\AuthorizedMessage.cpp">
+      <Filter>message</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Observer\IObservable.cpp">
+      <Filter>observer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Observer\MessagesUpdateEvent.cpp">
+      <Filter>observer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\helpers\File.cpp">
+      <Filter>helpers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\helpers\Socket\SocketException.cpp">
+      <Filter>helpers\socket</Filter>
+    </ClCompile>
+    <ClCompile Include="..\helpers\Socket\Socket.cpp">
+      <Filter>helpers\socket</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Client\helpers\SocketClient.cpp">
+      <Filter>helpers\socket</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Observer\ConnResetEvent.cpp">
+      <Filter>observer</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

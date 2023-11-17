@@ -9,6 +9,6 @@ std::string RequestMessage::GetMsg() const { return _message; }
 
 void RequestMessage::SetMsg(const std::string& m) { _message = m; }
 
-void RequestMessage::Deserialize(Deserializer& r) {}
+void RequestMessage::Deserialize(Deserializer& d) {}
 
-void RequestMessage::Serialize(Serializer& w) const {}
+void RequestMessage::Serialize(Serializer& s) const {}

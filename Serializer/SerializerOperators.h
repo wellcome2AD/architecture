@@ -1,6 +1,8 @@
 #pragma once
 
 #include <string>
+#include <vector>
+#include <memory>
 
 #include "Serializer.h"
 #include "../Message/IMessage.h"
@@ -44,23 +46,35 @@ inline Serializer& operator<<(Serializer& s, const IMessage* m)
 	{
 		return s;
 	}
-	std::string format;
-	switch (m->GetFormat()) {
-	case text:
-	{
-		format = "text";
-		break;
-	}
-	case file:
-	{
-		format = "file";
-		break;
-	}
-	}
+	std::string format = toString(m->GetFormat());
 	for(size_t i = 0; i < format.size(); ++i)
 	{
 		s.PutChar(format[i]);
 	}
 	m->Serialize(s);
+	return s;
+}
+
+inline Serializer& operator<<(Serializer& s, const IMessage& m)
+{
+	s << &m;
+	return s;
+}
+
+template <class T>
+inline Serializer& operator<<(Serializer& s, const std::vector<T>& v)
+{
+	s << v.size();
+	for (auto&& el : v)
+	{
+		s << el;
+	}
+	return s;
+}
+
+template <class T>
+inline Serializer& operator<<(Serializer& s, const std::shared_ptr<T>& ptr)
+{
+	s << ptr.get();
 	return s;
 }

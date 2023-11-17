@@ -1,41 +1,133 @@
 #include <time.h>
+#include <algorithm>
 
 #include "AppClient.h"
-#include "helpers/SocketClient.h"
 #include "../Serializer/SocketSerializer.h"
 #include "../Serializer/SerializerOperators.h"
+#include "../Deserializer/SocketDeserializer.h"
+#include "../Deserializer/DeserializerOperators.h"
 #include "../helpers/UtilString.h"
 #include "../helpers/UtilFile.h"
+#include "../helpers/socket/SocketException.h"
+#include "../Observer/Event.h"
+#include "../Observer/IObserver.h"
+#include "../Observer/MessagesUpdateEvent.h"
+#include "../Message/MessagePack.h"
+#include "../helpers/Socket/ConnResetException.h"
+#include "../Observer/ConnResetEvent.h"
+
+bool Client::connect(std::string url)
+{
+	if (_s)
+	{
+		return true;
+	}
+	_s = std::make_unique<SocketClient>();
+	static constexpr int timeout = 60;
+	auto start = clock();
+	auto lasted = 0;
+	bool succes_connect = false;
+	_s->init();
+	while (!(succes_connect = _s->connect(url)) && lasted < timeout)
+	{
+		lasted = (clock() - start) / CLOCKS_PER_SEC;
+		printf("%d sec : ", lasted);
+		_s->close();
+		_s->init();
+	}
+	if (!succes_connect)
+	{
+		printf("connection error to %s due to timeout (%d sec)\n", url.c_str(), timeout);
+	}
+	return succes_connect;
+}
+
+void Client::disconnect()
+{
+	if (_s)
+	{
+		_s.reset();
+	}
+}
 
 bool Client::send(const std::string& url, const AuthorizedMessage* msg)
 {
-    SocketClient s;
-    static constexpr int timeout = 60;
-    auto start = clock();
-    int len = 0;
+	if (!connect(url))
+	{
+		return false;
+	}
 
-    bool succes_connect = false;
-    auto lasted = 0;
-    s.init();
-    while (!(succes_connect = s.connect(url)) && lasted < timeout)
-    {
-        lasted = (clock() - start) / CLOCKS_PER_SEC;
-        printf("%d sec : ", lasted);
-        s.close();
-        s.init();
-    }
+	if (msg)
+	{
+		SocketSerializer s(_s.get());
+		s << msg << my_endl();
+		/*
+		printf("------SEND-----\n%s %s\n", msg->GetUsername().c_str(), msg->GetMsg().c_str());
+		printf("data format %s, ", toString(msg->GetFormat()).c_str());
+		printf("data size %zd\n", msg->GetMsg().size());
+		printf("--------------\n\n");
+		*/
+		return true;
+	}
+	return false;
+}
 
-    if (succes_connect)
-    {        
-        SocketSerializer Serializer(&s);
-        Serializer << msg;
-        printf("data format %s, ", toString(msg->GetFormat()).c_str());
-        printf("data size %zd\n", msg->GetMsg().size());
-    }
-    else
-    {
-        printf("connection error to %s due to timeout (%d sec)\n", url.c_str(), timeout);
-    }
+std::shared_ptr<IMessagePack> Client::recv()
+{
+	if (!_s)
+	{
+		printf("Socket disconnected\n");
+		return _msgs;
+	}
 
-    return len > 0;
+	SocketDeserializer d(_s.get());	
+	IMessage* recv_msgs = nullptr;
+	try
+	{
+		d >> recv_msgs;
+	}
+	catch (const ConnResetException& ex)
+	{
+		printExc(ex);
+		disconnect();
+		Notify(ConnResetEvent(0));
+		return _msgs;
+	}
+	catch (const std::exception& ex)
+	{
+		return _msgs;
+	}
+	assert(recv_msgs);
+	_msgs = std::shared_ptr<IMessagePack>(dynamic_cast<IMessagePack*>(recv_msgs));
+	assert(_msgs);
+	/*
+	printf("-----RECV-----\n");
+	for (auto&& msg : _msgs.get()->GetMsgs())
+	{
+		AuthorizedMessage* imsg = dynamic_cast<AuthorizedMessage*>(msg.get());
+		assert(imsg);
+		printf("%s : %s %s\n", imsg->GetUsername().c_str(), toString(imsg->GetFormat()).c_str(), imsg->GetMsg().c_str());
+	}
+	printf("--------------\n\n");
+	*/
+	Notify(MessagesUpdateEvent());
+	return _msgs;
+}
+
+std::shared_ptr<IMessagePack> Client::getMsgs() const
+{
+	return _msgs;
+}
+
+void Client::AddObserver(IObserver* o)
+{
+	_observers.push_back(o);
+}
+
+void Client::Notify(const Event& e)
+{
+	for (auto&& o : _observers)
+	{
+		o->Update(e);
+	}
 }

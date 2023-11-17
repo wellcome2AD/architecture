@@ -11,13 +11,26 @@
 #include "AppServer.h"
 #include "../Deserializer/DeserializerOperators.h"
 #include "../Deserializer/SocketDeserializer.h"
+#include "../Serializer/SerializerOperators.h"
+#include "../Serializer/SocketSerializer.h"
 #include "../helpers/UtilString.h"
 #include "../helpers/UtilFile.h"
+#include "../helpers/socket/SocketException.h"
 #include "../Message/IMessage.h"
 #include "../Message/FileMessage.h"
 #include "../Message/RequestMessage.h"
-#include "ResponseBuilder/ResponseBuilder.h"
+#include "../Message/MessagePack.h"
 #include "../helpers/File.h"
+#include "ClientConnection/MsgQueue.h"
+#include "ResponseBuilder/ResponseBuilder.h"
+#include "../Observer/MessagesUpdateEvent.h"
+#include "../Observer/ConnResetEvent.h"
+#include "../helpers/Socket/ConnResetException.h"
+
+Server::~Server()
+{
+	// TODO: остановить поток обработки сообщений из MsgQueue и поток принятия новых соединений
+}
 
 bool Server::init(int port)
 {
@@ -55,24 +68,34 @@ bool Server::init(int port)
 
 void Server::run()
 {
+	auto&& task = [&]() {
+		while (true)
+		{
+			std::shared_ptr<Socket> client = m_socket.accept(); // accept incoming connection
+			if (!client->isValid())
+			{
+				continue;
+			}
+			printf("\n--------------\n");
+			printf("Client %d connected\n", _clients.size());
+			printf("--------------\n");
+			auto&& cl_con = std::shared_ptr<ClientConnection>(new ClientConnection(client, _clients.size()));
+			cl_con->AddObserver(this);
+			_clients.push_back(cl_con);
+
+			printf("send to client %d:\n", cl_con->GetNumber());
+			std::lock_guard lg(m_data_mutex);
+			MessagePack msg_pack = convertSContToMsgPack();
+			cl_con->SendMsg(msg_pack);
+			printf("--------------\n");
+		}
+	};
+	std::thread thr(task);
+	thr.detach();
+
 	while (true)
 	{
 		fileWriteStr(std::string("resources\\ALIVE") + toStr(_getpid()), ""); // pet the watchdog
-		std::shared_ptr<Socket> client = m_socket.accept(); // accept incoming connection
-
-		if (!client->isValid())
-		{
-			continue;
-		}
-
-		SocketDeserializer r(&*client);
-		IMessage* msg = nullptr;
-		r >> msg;
-		auto response = handleMessage(msg);
-		if (response.size() != 0) 
-		{
-			client->sendStr(response);
-		}
 	}
 }
 
@@ -97,7 +120,7 @@ void Server::synchState()
 			if (!line.empty())
 			{
 				auto temp = split(line, " "); // split by space on user and message
-				m_data->emplace(temp[0], temp[1]);
+				m_data->push_back(std::make_pair<std::string, std::string>(temp[0].data(), temp[0].data()));
 			}
 		}
 		fclose(state_file);
@@ -193,26 +216,38 @@ bool Server::checkRights(const std::string& userName, format msgType) const
 	return user_has_right;
 }
 
-std::string Server::handleMessage(IMessage* m)
+void Server::handleMessage(const IMessage* m, ClientConnection& client)
 {
-	std::string response;
-	if (m == nullptr)
+	assert(m);
+	switch (m->GetFormat())
 	{
-		return response;
-	}
-	
-	if (m->GetFormat() == getReq)
+	case getReq:
 	{
-		response = handleRequest(dynamic_cast<RequestMessage*>(m));		
+		std::string response = handleRequest(static_cast<const RequestMessage*>(m));
+		if (response.size() != 0)
+		{
+			client.sendStr(response);
+			// удаление ClientConnection
+			auto&& predicate = [&client](const std::shared_ptr<ClientConnection>& c) {
+				return c->GetNumber() == client.GetNumber();
+			};
+			std::lock_guard lg(_clients_mutex);
+			_clients.erase(std::remove_if(_clients.begin(), _clients.end(), predicate), _clients.end());
+		}
+		break;
 	}
-	else
+	case text:
+	case file:
 	{
-		handleAuthorizedMessage(dynamic_cast<AuthorizedMessage*>(m));
+		handleAuthorizedMessage(static_cast<const AuthorizedMessage*>(m));
+		break;
 	}
-	return response;
+	default:
+		assert(0);
+		break;
+	}
 }
-
-void Server::handleAuthorizedMessage(AuthorizedMessage* m)
+void Server::handleAuthorizedMessage(const AuthorizedMessage* m)
 {
 	if (userExists(m->GetUsername(), m->GetPassword()) != 2) {
 		printf("User %s with password %s doesn't exist\n\n", m->GetUsername().c_str(), m->GetPassword().c_str());
@@ -232,19 +267,25 @@ void Server::handleAuthorizedMessage(AuthorizedMessage* m)
 	}
 	case file:
 	{
-		std::string fileName = createUniqueFileName((dynamic_cast<FileMessage*>(m))->GetExtension().c_str());
+		std::string fileName = createUniqueFileName(dynamic_cast<const FileMessage*>(m)->GetExtension().c_str());
 		fileWrite("resources/" + fileName, m->GetMsg().c_str(), m->GetMsg().size(), true);
 		data_to_store = fileName;
 		break;
 	}
+	default:
+		assert(0);
+		break;
 	}
-	printf("-----RECV-----\n%s %s\n--------------\n\n", m->GetUsername().c_str(), data_to_store.c_str());
-	fflush(stdout);
-	m_data->emplace(m->GetUsername(), data_to_store); // store it in the feed
+	std::lock_guard lg(m_data_mutex);
+	m_data->push_back(std::make_pair<std::string, std::string>(m->GetUsername(), data_to_store.data())); // store it in the feed
 	fileAppend("resources\\STATE", m->GetUsername() + " " + data_to_store + "\r\n"); // store it in the file for subsequent runs
+	printf("\n--------------\n");
+	printf("send to all clients:\n");
+	MessagePack msg_pack = convertSContToMsgPack();	
+	broadcast(msg_pack);
 }
 
-std::string Server::handleRequest(RequestMessage* m)
+std::string Server::handleRequest(const RequestMessage* m)
 {
 	std::string response;
 	auto endsWith = [](const std::string& fileName, const std::string& ext) {
@@ -253,7 +294,7 @@ std::string Server::handleRequest(RequestMessage* m)
 	auto&& root = m->GetMsg();
 	ResponseBuilder r_b;
 	if (root == "\\")
-	{		
+	{
 		r_b.SetCode(200);
 		r_b.SetContent(*m_data);
 		r_b.SetContentType(text_html);
@@ -276,4 +317,74 @@ std::string Server::handleRequest(RequestMessage* m)
 		}
 	}
 	return response;
+}
+
+void Server::broadcast(const IMessagePack& msg_pack)
+{
+	printf("----BROADCAST----\n");
+	auto&& predicate = [&msg_pack](const std::shared_ptr<ClientConnection>& c) {
+		printf("send to client %d\n", c->GetNumber());
+		try
+		{
+			c->SendMsg(msg_pack);
+		}
+		catch (const ConnResetException& ex)
+		{
+			printExc(ex);
+			return false;
+		}
+		catch (const std::exception& ex)
+		{
+			return true;
+		}
+		printf("SUCCESS\n");
+		return false;
+	};
+	_clients.erase(std::remove_if(_clients.begin(), _clients.end(), predicate), _clients.end());
+	printf("-----------------\n");
+}
+
+MessagePack Server::convertSContToMsgPack() const
+{
+	MessagePack msg_pack;
+	for (auto&& msg : *m_data)
+	{
+		printf("%s %s\n", msg.first.c_str(), msg.second.c_str());
+		msg_pack.AddMsg(std::shared_ptr<TextMessage>(new TextMessage(msg.first, std::string(), msg.second)));
+	}
+	return msg_pack;
+}
+
+void Server::Update(const Event& e)
+{
+	switch (e.GetEventType())
+	{
+	case connReset:
+	{
+		auto &&event = static_cast<const ConnResetEvent&>(e);
+		auto &&client_number = event.GetNumber();
+		auto predicate = [&](std::shared_ptr<ClientConnection> c) { return c->GetNumber() == client_number; };
+		_clients.erase(std::remove_if(_clients.begin(), _clients.end(), predicate), _clients.end());
+		break;
+	}
+	case messagesUpdate:
+	{
+		if (!MsgQueue::GetInstance().IsEmpty())
+		{
+			auto&& msg = MsgQueue::GetInstance().Pop();
+			printf("-----RECV-----\n");
+			printf("receive from client %d:\n", msg->GetNumber());
+			auto&& imsg = static_cast<const AuthorizedMessage*>(msg->GetMsg());
+			printf("%s : %s %s\n", imsg->GetUsername().c_str(), toString(imsg->GetFormat()).c_str(), imsg->GetMsg().c_str());
+			printf("--------------\n\n");
+			handleMessage(msg->GetMsg(), *(_clients[msg->GetNumber()]));
+		}
+		break;
+	}
+	default:
+	{
+		assert(0);
+		break;
+	}
+	}
 }

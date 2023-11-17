@@ -5,6 +5,7 @@
 class FileMessage : public AuthorizedMessage {
 public:
 	FileMessage() = default;
+	virtual ~FileMessage() override = default;
 	FileMessage(const std::string& username, const std::string& password, const std::string& extension, const std::string& message);
 	
 	virtual void Deserialize(Deserializer& d) override;
@@ -17,8 +18,3 @@ public:
 private:
 	std::string _extension;
 };
-
-inline std::ostream& operator<<(std::ostream& os, const FileMessage& m) {
-	os << m.GetUsername() << m.GetPassword() << toString(m.GetFormat()) << m.GetMsg();
-	return os;
-}

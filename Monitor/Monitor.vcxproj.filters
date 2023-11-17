@@ -1,33 +1,45 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="AppMonitor.cpp" />
-    <ClCompile Include="AppMonitorMain.cpp" />
     <ClCompile Include="helpers\Console.cpp">
       <Filter>helpers</Filter>
     </ClCompile>
     <ClCompile Include="helpers\Process.cpp">
       <Filter>helpers</Filter>
     </ClCompile>
+    <ClCompile Include="AppMonitor.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="AppMonitorMain.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="AppMonitor.h" />
-    <ClInclude Include="helpers\Console.h">
-      <Filter>helpers</Filter>
-    </ClInclude>
-    <ClInclude Include="helpers\Process.h">
-      <Filter>helpers</Filter>
-    </ClInclude>
     <ClInclude Include="..\helpers\UtilFile.h">
       <Filter>helpers</Filter>
     </ClInclude>
     <ClInclude Include="..\helpers\UtilString.h">
       <Filter>helpers</Filter>
     </ClInclude>
+    <ClInclude Include="helpers\Console.h">
+      <Filter>helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="helpers\Process.h">
+      <Filter>helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="AppMonitor.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="helpers">
-      <UniqueIdentifier>{e26fcb79-3aed-42cb-b998-deebcc9d7c1c}</UniqueIdentifier>
+      <UniqueIdentifier>{75019db4-34bc-4788-9e30-fec0266d611d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Исходные файлы">
+      <UniqueIdentifier>{5de70f2f-47a0-439f-b907-52856922a89f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Файлы заголовков">
+      <UniqueIdentifier>{e4a212a3-d5af-45df-b33b-639f4c02858c}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

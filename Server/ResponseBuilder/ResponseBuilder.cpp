@@ -1,3 +1,5 @@
+#include <assert.h>
+
 #include "ResponseBuilder.h"
 
 void ResponseBuilder::SetCode(int code) { _code = code; }
@@ -29,6 +31,9 @@ static std::string codeStatus(int code)
 		return "OK";
 	case 404:
 		return "Not Found";
+	default:
+		assert(0);
+		break;
 	}
 }
 

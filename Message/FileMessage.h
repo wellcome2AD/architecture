@@ -8,6 +8,8 @@ public:
 	virtual ~FileMessage() override = default;
 	FileMessage(const std::string& username, const std::string& password, const std::string& extension, const std::string& message);
 	
+	virtual FileMessage *Clone() const override;
+
 	virtual void Deserialize(Deserializer& d) override;
 	virtual void Serialize(Serializer& s) const override;
 	virtual format GetFormat() const override;

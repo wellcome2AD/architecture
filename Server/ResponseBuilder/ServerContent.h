@@ -8,12 +8,8 @@ class ServerContent : public IConvertableToHttp
 {
 public:
 	virtual std::string GetHttp() const override;
-
-	void push_back(std::pair<std::string, std::string> v)
-	{
-		m_data.push_back(v);
-	}
-
+	void push_back(std::pair<std::string, std::string> v);
+	std::pair<std::string, std::string> back() const;
 	std::vector<std::pair<std::string, std::string>>::iterator begin();
 	std::vector<std::pair<std::string, std::string>>::iterator end();
 	bool empty() const;

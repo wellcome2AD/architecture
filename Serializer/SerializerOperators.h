@@ -75,6 +75,15 @@ inline Serializer& operator<<(Serializer& s, const std::vector<T>& v)
 template <class T>
 inline Serializer& operator<<(Serializer& s, const std::shared_ptr<T>& ptr)
 {
+	assert(ptr);
+	s << ptr.get();
+	return s;
+}
+
+template <class T>
+inline Serializer& operator<<(Serializer& s, const std::unique_ptr<T>& ptr)
+{
+	assert(ptr);
 	s << ptr.get();
 	return s;
 }

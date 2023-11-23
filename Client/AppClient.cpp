@@ -77,7 +77,7 @@ std::shared_ptr<IMessagePack> Client::recv()
 	if (!_s)
 	{
 		printf("Socket disconnected\n");
-		return _msgs;
+		return nullptr;
 	}
 
 	SocketDeserializer d(_s.get());	
@@ -91,15 +91,13 @@ std::shared_ptr<IMessagePack> Client::recv()
 		printExc(ex);
 		disconnect();
 		Notify(ConnResetEvent(0));
-		return _msgs;
+		return nullptr;
 	}
-	catch (const std::exception& ex)
+	catch (const std::exception&)
 	{
-		return _msgs;
+		return nullptr;
 	}
-	assert(recv_msgs);
-	_msgs = std::shared_ptr<IMessagePack>(dynamic_cast<IMessagePack*>(recv_msgs));
-	assert(_msgs);
+	assert(recv_msgs);		
 	/*
 	printf("-----RECV-----\n");
 	for (auto&& msg : _msgs.get()->GetMsgs())
@@ -110,13 +108,8 @@ std::shared_ptr<IMessagePack> Client::recv()
 	}
 	printf("--------------\n\n");
 	*/
-	Notify(MessagesUpdateEvent());
-	return _msgs;
-}
-
-std::shared_ptr<IMessagePack> Client::getMsgs() const
-{
-	return _msgs;
+	Notify(MessagesUpdateEvent(0, *recv_msgs));
+	return std::shared_ptr<IMessagePack>(static_cast<IMessagePack*>(recv_msgs));
 }
 
 void Client::AddObserver(IObserver* o)

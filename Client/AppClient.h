@@ -19,7 +19,6 @@ public:
 	void disconnect();
 	bool send(const std::string& url, const AuthorizedMessage* msg);
 	std::shared_ptr<IMessagePack> recv();
-	std::shared_ptr<IMessagePack> getMsgs() const;
 
 	virtual void AddObserver(IObserver* o) override;
 	virtual void Notify(const Event& e) override;
@@ -30,5 +29,4 @@ private:
 private:
 	std::unique_ptr<SocketClient> _s;
 	std::vector<IObserver*> _observers;
-	std::shared_ptr<IMessagePack> _msgs;
 };

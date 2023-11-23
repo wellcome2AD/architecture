@@ -21,6 +21,16 @@ std::string ServerContent::GetHttp() const
     return payload + _end;
 }
 
+void ServerContent::push_back(std::pair<std::string, std::string> v)
+{
+	m_data.push_back(v);
+}
+
+std::pair<std::string, std::string> ServerContent::back() const
+{
+	return m_data.back();
+}
+
 std::vector<std::pair<std::string, std::string>>::iterator ServerContent::begin() { return m_data.begin(); }
 
 std::vector<std::pair<std::string, std::string>>::iterator ServerContent::end() { return m_data.end(); }

@@ -8,6 +8,8 @@ public:
 	virtual ~AuthorizedMessage() override = default;
 	AuthorizedMessage(const std::string& username, const std::string& password, const std::string& message);
 
+	virtual AuthorizedMessage *Clone() const override = 0;
+
 	virtual std::string GetMsg() const override;
 	virtual void SetMsg(const std::string& m) override;
 

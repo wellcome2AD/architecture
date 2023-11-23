@@ -43,7 +43,7 @@ bool Socket::isValid()
 	return m_socket >= 0;
 }
 
-int Socket::send(const char* msg, int len)
+int Socket::send(const char* msg, size_t len)
 {
 	if (len <= 0)
 	{

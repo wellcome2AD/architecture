@@ -109,3 +109,12 @@ inline Deserializer& operator>>(Deserializer& d, std::shared_ptr<T>& ptr)
 	ptr.reset(data);
 	return d;
 }
+
+template <class T>
+inline Deserializer& operator>>(Deserializer& d, std::unique_ptr<T>& ptr)
+{
+	T* data = nullptr;
+	d >> data;
+	ptr.reset(data);
+	return d;
+}

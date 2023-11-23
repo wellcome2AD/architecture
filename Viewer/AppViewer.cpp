@@ -10,6 +10,11 @@
 #include "../helpers/Socket/ConnResetException.h"
 #include "../helpers/UtilFile.h"
 
+Viewer::Viewer()
+{
+	_msg_pack = std::make_shared<MessagePack>();
+}
+
 void Viewer::printMenu()
 {
 	std::cout << std::string(10, '-') + '\n';
@@ -130,8 +135,8 @@ void Viewer::printMsgs() const
 		std::cout << std::string(14, '-') << std::endl;
 		for (auto&& msg : _msg_pack.get()->GetMsgs())
 		{
-			auto&& text_msg = dynamic_cast<TextMessage*>(msg.get());
-			std::cout << text_msg->GetUsername() << " : " << text_msg->GetMsg() << std::endl;
+			auto&& text_msg = dynamic_cast<const TextMessage&>(*msg);
+			std::cout << text_msg.GetUsername() << " : " << text_msg.GetMsg() << std::endl;
 		}
 		std::cout << std::string(14, '-') << std::endl;
 	}
@@ -150,7 +155,25 @@ void Viewer::Update(const Event& e)
 	case messagesUpdate:
 	{
 		std::lock_guard<std::mutex> lg(_msg_mutex);
-		_msg_pack = _client.getMsgs();
+		auto &&msgs = static_cast<const MessagesUpdateEvent&>(e).GetMsg();
+		switch (msgs.GetFormat())
+		{
+			case text:
+			{
+				auto &&txt_msg = static_cast<const TextMessage&>(msgs);
+				_msg_pack->AddMsg(txt_msg);
+				break;
+			}
+			case msgPack:
+			{
+				auto&& pack_msg = static_cast<const MessagePack&>(msgs);
+				for(auto &&m : pack_msg.GetMsgs())
+				{
+					_msg_pack->AddMsg(*m);
+				}
+				break;
+			}
+		}
 		break;
 	}
 	case connReset:

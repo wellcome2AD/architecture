@@ -176,6 +176,7 @@
     <ClInclude Include="AppClient.h" />
     <ClInclude Include="Event.h" />
     <ClInclude Include="helpers\SocketClient.h" />
+    <ClInclude Include="IClonable.h" />
     <ClInclude Include="IObserver.h" />
     <ClInclude Include="IObservable.h" />
     <ClInclude Include="MessagesUpdateEvent.h" />

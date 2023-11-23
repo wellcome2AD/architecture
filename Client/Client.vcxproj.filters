@@ -141,6 +141,9 @@
     <ClInclude Include="..\Observer\ConnResetEvent.h">
       <Filter>observer</Filter>
     </ClInclude>
+    <ClInclude Include="IClonable.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="message">

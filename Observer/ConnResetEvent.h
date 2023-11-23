@@ -8,11 +8,11 @@
 class ConnResetEvent : public Event
 {
 public:
-	ConnResetEvent(int client_num);
+	ConnResetEvent(size_t client_num);
 	virtual ~ConnResetEvent() override = default;
 	virtual eventType GetEventType() const override;
-	int GetNumber() const;
+	size_t GetNumber() const;
 
 private:
-	int _con_num;
+	size_t _con_num;
 };

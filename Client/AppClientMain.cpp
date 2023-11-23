@@ -49,7 +49,7 @@
 }*/
 
 int main()
-{	
+{
 	// посылка этого сообщения на 127.0.0.1:8080
 	std::string user_name = "alice", password = "1234", address = "127.0.0.1:8080", msg = "Hello";	
 	AuthorizedMessage* msg_to_send = nullptr;
@@ -73,11 +73,11 @@ int main()
 	}	
 	Client cl;
 	cl.send(address, msg_to_send);
-	auto msgs = cl.recv();
+	auto &&msgs = cl.recv();
 	if (msgs)
 	{
 		std::cout << std::string(14, '-') << std::endl;
-		for (auto m : msgs->GetMsgs())
+		for (auto &&m : msgs->GetMsgs())
 		{
 			auto&& authorized_m = static_cast<AuthorizedMessage*>(m.get());
 			std::cout << authorized_m->GetUsername() << ": " << toString(authorized_m->GetFormat()) << " " << authorized_m->GetMsg() << std::endl;

@@ -12,7 +12,7 @@ public:
     virtual ~Socket();
     bool init(uint32_t timeout = 0); // creates socket and performs basic initialization
     bool isValid(); // checks if socket is valid
-    int send(const char* msg, int len); // sends a message via socket
+    int send(const char* msg, size_t len); // sends a message via socket
     int sendStr(const std::string& str); // sends a string via socket
     int recv(); // receives a message via socket
     char* data(); // buffer that holds received message

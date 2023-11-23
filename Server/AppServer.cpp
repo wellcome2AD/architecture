@@ -76,14 +76,14 @@ void Server::run()
 				continue;
 			}
 			printf("\n--------------\n");
-			printf("Client %d connected\n", _clients.size());
+			printf("Client %zd connected\n", _clients.size());
 			printf("--------------\n");
 			auto&& cl_con = std::shared_ptr<ClientConnection>(new ClientConnection(client, _clients.size()));
 			cl_con->AddObserver(this);
 			std::lock_guard clients_lg(_clients_mutex);
 			_clients.push_back(cl_con);
 
-			printf("send to client %d:\n", cl_con->GetNumber());
+			printf("send to client %zd:\n", cl_con->GetNumber());
 			std::lock_guard mdata_lg(m_data_mutex);
 			MessagePack msg_pack = convertSContToMsgPack();
 			cl_con->SendMsg(msg_pack);
@@ -241,8 +241,8 @@ void Server::handleMessage(const IMessage* m, ClientConnection& client)
 		auto&& msg_pack = static_cast<const IMessagePack*>(m);
 		for (auto&& imsg : msg_pack->GetMsgs())
 		{
-			auto&& author_msg = static_cast<AuthorizedMessage*>(imsg.get());
-			handleAuthorizedMessage(author_msg);
+			auto&& author_msg = static_cast<const AuthorizedMessage&>(*imsg);
+			handleAuthorizedMessage(&author_msg);
 		}
 		break;
 	}
@@ -293,7 +293,7 @@ void Server::handleAuthorizedMessage(const AuthorizedMessage* m)
 	printf("send to all clients:\n");
 	// MessagePack msg_pack = convertSContToMsgPack();	
 	MessagePack msg_pack;
-	msg_pack.AddMsg(std::shared_ptr<TextMessage>(new TextMessage(m->GetUsername(), std::string(), data_to_store.data())));
+	msg_pack.AddMsg(TextMessage(m->GetUsername(), std::string(), data_to_store.data()));
 	broadcast(msg_pack);
 }
 
@@ -335,7 +335,7 @@ void Server::broadcast(const IMessagePack& msg_pack)
 {
 	printf("----BROADCAST----\n");
 	auto&& predicate = [&msg_pack](const std::shared_ptr<ClientConnection>& c) {
-		printf("send to client %d new message\n", c->GetNumber());
+		printf("send to client %zd new message\n", c->GetNumber());
 		try
 		{
 			c->SendMsg(msg_pack);
@@ -345,7 +345,7 @@ void Server::broadcast(const IMessagePack& msg_pack)
 			printExc(ex);
 			return false;
 		}
-		catch (const std::exception& ex)
+		catch (const std::exception&)
 		{
 			return true;
 		}
@@ -363,7 +363,7 @@ MessagePack Server::convertSContToMsgPack() const
 	for (auto&& msg : *m_data)
 	{
 		printf("%s %s\n", msg.first.c_str(), msg.second.c_str());
-		msg_pack.AddMsg(std::shared_ptr<TextMessage>(new TextMessage(msg.first, std::string(), msg.second)));
+		msg_pack.AddMsg(TextMessage(msg.first, std::string(), msg.second));
 	}
 	return msg_pack;
 }
@@ -383,12 +383,11 @@ void Server::Update(const Event& e)
 	}
 	case messagesUpdate:
 	{
-		// auto&& msg = MsgQueue::GetInstance().Pop();
 		auto&& event = static_cast<const MessagesUpdateEvent&>(e);
 		auto&& client_num = event.GetClientNum();
 		auto&& msg = event.GetMsg();
 		printf("-----RECV-----\n");
-		printf("receive from client %d:\n", client_num);
+		printf("receive from client %zd:\n", client_num);
 		switch (msg.GetFormat())
 		{
 		case msgPack:
@@ -396,8 +395,8 @@ void Server::Update(const Event& e)
 			auto&& msg_pack = static_cast<const IMessagePack&>(msg);
 			for (auto&& imsg : msg_pack.GetMsgs())
 			{
-				auto&& author_msg = static_cast<AuthorizedMessage*>(imsg.get());
-				printf("%s : %s %s\n", author_msg->GetUsername().c_str(), toString(author_msg->GetFormat()).c_str(), author_msg->GetMsg().c_str());
+				auto&& author_msg = static_cast<const AuthorizedMessage&>(*imsg);
+				printf("%s : %s %s\n", author_msg.GetUsername().c_str(), toString(author_msg.GetFormat()).c_str(), author_msg.GetMsg().c_str());
 			}
 			break;
 		}

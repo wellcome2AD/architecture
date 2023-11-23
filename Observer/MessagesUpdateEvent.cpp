@@ -1,6 +1,6 @@
 #include "MessagesUpdateEvent.h"
 
-MessagesUpdateEvent::MessagesUpdateEvent(int client_num, const IMessage& msg)
+MessagesUpdateEvent::MessagesUpdateEvent(size_t client_num, const IMessage& msg)
 	: 
 	 _client_num(client_num),
 	 _msg(msg)
@@ -11,7 +11,7 @@ eventType MessagesUpdateEvent::GetEventType() const
 	return messagesUpdate;
 }
 
-int MessagesUpdateEvent::GetClientNum() const
+size_t MessagesUpdateEvent::GetClientNum() const
 {
 	return _client_num;
 }

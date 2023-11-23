@@ -2,9 +2,16 @@
 #include "../Deserializer/DeserializerOperators.h"
 #include "../Serializer/SerializerOperators.h"
 
-MessagePack::MessagePack(const std::vector<std::shared_ptr<IMessage>>& msgs)
-    : _msgs(msgs) 
-{}
+MessagePack::MessagePack(const MessagePack& other)
+{
+    for (auto&& m : other._msgs)
+        _msgs.push_back(std::unique_ptr<IMessage>(m->Clone()));
+}
+
+MessagePack* MessagePack::Clone() const
+{
+    return new MessagePack(*this);
+}
 
 format MessagePack::GetFormat() const { return msgPack; }
 
@@ -22,25 +29,12 @@ void MessagePack::Serialize(Serializer& s) const
     s << _msgs;
 }
 
-void MessagePack::AddMsg(std::shared_ptr<IMessage> msg)
+void MessagePack::AddMsg(const IMessage& msg)
 {
-    _msgs.push_back(msg);
+    _msgs.push_back(std::unique_ptr<IMessage>(msg.Clone()));
 }
 
-#include <algorithm>
-
-void MessagePack::RemoveMsg(std::shared_ptr<IMessage> msg)
-{
-    for (auto m = _msgs.begin(); m != _msgs.end(); ++m)
-    {
-        if ((*m)->GetFormat() == msg->GetFormat() && (*m)->GetMsg() == msg->GetMsg())
-        {
-            _msgs.erase(m);
-        }
-    }
-}
-
-std::vector<std::shared_ptr<IMessage>> MessagePack::GetMsgs() const
+const std::vector<std::unique_ptr<IMessage>>& MessagePack::GetMsgs() const
 {
     return _msgs;
 }

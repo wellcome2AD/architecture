@@ -50,7 +50,7 @@ inline static char* fileReadStr(const std::string& path)
     return fileRead(path, 0, true);
 }
 
-inline static int fileWrite(const std::string& name, const char* bulk, int len, bool append = false, bool exclusive = false)
+inline static size_t fileWrite(const std::string& name, const char* bulk, size_t len, bool append = false, bool exclusive = false)
 {
     size_t pos = name.rfind("\\");
     if (pos != std::string::npos)
@@ -67,23 +67,23 @@ inline static int fileWrite(const std::string& name, const char* bulk, int len, 
     if (!f)
         return 0;
 
-    int result = fwrite(bulk, 1, len, f);
+    size_t result = fwrite(bulk, 1, len, f);
     fclose(f);
     return result;
 }
 
-inline static int fileWriteStr(const std::string& name, std::string str, bool append = false, bool exclusive = false)
+inline static size_t fileWriteStr(const std::string& name, std::string str, bool append = false, bool exclusive = false)
 {
     return fileWrite(name, str.c_str(), str.length(), append, exclusive);
 }
 
-inline static int fileAppend(const std::string& name, std::string str)
+inline static size_t fileAppend(const std::string& name, std::string str)
 {
     return fileWriteStr(name, str, true);
 }
 
 // tries to open file in "exclusive" mode: if the file does not exist, then the function creates it, otherwise it fails.
-inline static int fileWriteExclusive(const std::string& name, std::string str)
+inline static size_t fileWriteExclusive(const std::string& name, std::string str)
 {
     return fileWriteStr(name, str, false, true);
 }

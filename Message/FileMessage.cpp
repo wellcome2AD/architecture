@@ -8,6 +8,11 @@ FileMessage::FileMessage(const std::string& username, const std::string& passwor
 	  _extension(extension)
 {}
 
+FileMessage* FileMessage::Clone() const
+{
+	return new FileMessage(*this);
+}
+
 void FileMessage::Deserialize(Deserializer& d)
 {
 	d >> _username >> _password >> _extension >> _message;

@@ -11,7 +11,7 @@
 #include "../../Observer/ConnResetEvent.h"
 #include "../../helpers/Socket/ConnResetException.h"
 
-ClientConnection::ClientConnection(std::shared_ptr<Socket> client, int number) : _client(client), _number(number)
+ClientConnection::ClientConnection(std::shared_ptr<Socket> client, size_t number) : _client(client), _number(number)
 {
 	std::thread thr([&]() {
 		std::shared_ptr<Socket> client_copy(client);
@@ -22,16 +22,16 @@ ClientConnection::ClientConnection(std::shared_ptr<Socket> client, int number) :
 			try
 			{
 				r >> msg;
-				Notify(MessagesUpdateEvent(number, *msg));
+				Notify(MessagesUpdateEvent(_number, *msg));
 			}
 			catch (const ConnResetException& ex)
 			{
-				printf("Client %d: ", _number);
+				printf("Client %zd: ", _number);
 				printExc(ex);
 				Notify(ConnResetEvent(_number));
 				break;
 			}
-			catch (const std::exception& ex)
+			catch (const std::exception&)
 			{
 			}			
 		}
@@ -39,7 +39,7 @@ ClientConnection::ClientConnection(std::shared_ptr<Socket> client, int number) :
 	thr.detach();
 }
 
-int ClientConnection::GetNumber() const
+size_t ClientConnection::GetNumber() const
 {
 	return _number;
 }
@@ -58,11 +58,11 @@ void ClientConnection::SendMsg(const IMessage& msg)
 	}
 	catch (const ConnResetException& ex)
 	{
-		printf("Client %d: ", _number);
+		printf("Client %zd: ", _number);
 		printExc(ex);
 		Notify(ConnResetEvent(_number));
 	}
-	catch (const std::exception& ex)
+	catch (const std::exception&)
 	{
 	}
 }

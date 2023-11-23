@@ -14,7 +14,7 @@ public:
 	static void Run();
 
 private:
-	Viewer() = default;
+	Viewer();
 	virtual void Update(const Event& e) override;
 	void tryToConnect();
 	void printMenu();

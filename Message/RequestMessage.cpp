@@ -3,6 +3,11 @@
 
 RequestMessage::RequestMessage(const std::string& message) : _message(message) {}
 
+RequestMessage* RequestMessage::Clone() const
+{
+    return new RequestMessage(*this);
+}
+
 format RequestMessage::GetFormat() const { return getReq; }
 
 std::string RequestMessage::GetMsg() const { return _message; }

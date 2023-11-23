@@ -3,6 +3,8 @@
 #include <string>
 #include <assert.h>
 
+#include "../Client/IClonable.h"
+
 #define SIZE_OF_FORMAT 4
 
 class Deserializer;
@@ -50,9 +52,10 @@ inline format fromString(std::string f)
 	return text;
 }
 
-class IMessage {
+class IMessage : public IClonable {
 public:
 	virtual ~IMessage() = default;
+	virtual IMessage* Clone() const override = 0;
 	virtual format GetFormat() const = 0;
 	virtual std::string GetMsg() const = 0;
 	virtual void SetMsg(const std::string& m) = 0;

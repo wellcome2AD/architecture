@@ -16,11 +16,6 @@
 #include "../helpers/Socket/ConnResetException.h"
 #include "../Observer/ConnResetEvent.h"
 
-Client::Client()
-{
-	_msgs = std::make_shared<MessagePack>();
-}
-
 bool Client::connect(std::string url)
 {
 	if (_s)
@@ -77,7 +72,7 @@ bool Client::send(const std::string& url, const AuthorizedMessage* msg)
 	return false;
 }
 
-std::shared_ptr<IMessage> Client::recv()
+std::shared_ptr<IMessagePack> Client::recv()
 {
 	if (!_s)
 	{
@@ -98,7 +93,7 @@ std::shared_ptr<IMessage> Client::recv()
 		Notify(ConnResetEvent(0));
 		return nullptr;
 	}
-	catch (const std::exception& ex)
+	catch (const std::exception&)
 	{
 		return nullptr;
 	}
@@ -114,7 +109,7 @@ std::shared_ptr<IMessage> Client::recv()
 	printf("--------------\n\n");
 	*/
 	Notify(MessagesUpdateEvent(0, *recv_msgs));
-	return std::make_shared<IMessage>(recv_msgs);
+	return std::shared_ptr<IMessagePack>(static_cast<IMessagePack*>(recv_msgs));
 }
 
 void Client::AddObserver(IObserver* o)

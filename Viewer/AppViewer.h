@@ -7,6 +7,7 @@
 #include "../Client/AppClient.h"
 #include "../Observer/IObserver.h"
 #include "../Message/IMessagePack.h"
+#include "../Monitor/helpers/Console.h"
 
 class Viewer : public IObserver
 {
@@ -14,12 +15,12 @@ public:
 	static void Run();
 
 private:
-	Viewer();
-	virtual void Update(const Event& e) override;
+	Viewer();	
 	void tryToConnect();
-	void printMenu();
-	void printMsgs() const;
 	void sendMsg(const std::string& username, const std::string& password, const std::string& msg);
+	void printMsgs() const;	
+	void handleMessage(const IMessage& m);
+	virtual void Update(const Event& e) override;
 
 private:
 	std::stringstream _buffer;
@@ -29,6 +30,8 @@ private:
 	Client _client;
 	std::atomic<bool> is_connected;
 
-	mutable std::mutex _msg_mutex;
 	std::shared_ptr<IMessagePack> _msg_pack;
+
+	mutable std::mutex _console_mutex;
+	Console m_console;
 };

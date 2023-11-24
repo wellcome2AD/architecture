@@ -58,14 +58,18 @@ inline static size_t fileWrite(const std::string& name, const char* bulk, size_t
 
     FILE* f = NULL;
     if (append)
+    {
         f = fopen(name.c_str(), "ab");
+    }
     else
     {
         int fd = _open(name.c_str(), (exclusive ? _O_EXCL : 0) | _O_WRONLY | _O_CREAT | _O_TRUNC | _O_BINARY, _S_IREAD | _S_IWRITE);
         f = fd == -1 ? NULL : _fdopen(fd, "wb");
     }
     if (!f)
+    {
         return 0;
+    }
 
     size_t result = fwrite(bulk, 1, len, f);
     fclose(f);

@@ -24,7 +24,8 @@ void Console::handleCtrlC(void (*handler)())
 
 void Console::clearScreen()
 {
-    fprintf(stderr, "\033[2J\033[1;1H");
+    // fprintf(stdout, "\033[2J\033[1;1H");
+    system("cls");
 }
 
 bool Console::isEscapePressed()

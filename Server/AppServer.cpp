@@ -120,7 +120,8 @@ void Server::synchState()
 			if (!line.empty())
 			{
 				auto temp = split(line, " "); // split by space on user and message
-				m_data->push_back(std::make_pair<std::string, std::string>(temp[0].data(), temp[0].data()));
+				auto msg = join(temp, " ", 1);
+				m_data->push_back(std::make_pair<std::string, std::string>(temp[0].data(), msg.c_str()));
 			}
 		}
 		fclose(state_file);
@@ -269,17 +270,23 @@ void Server::handleAuthorizedMessage(const AuthorizedMessage* m)
 		return;
 	}
 	std::string data_to_store;
+	std::unique_ptr<AuthorizedMessage> msg;
 	switch (m->GetFormat()) {
 	case text:
 	{
 		data_to_store = m->GetMsg();
+		msg = std::make_unique<TextMessage>(m->GetUsername(), "", data_to_store.data());
 		break;
 	}
 	case file:
 	{
-		std::string fileName = createUniqueFileName(dynamic_cast<const FileMessage*>(m)->GetExtension().c_str());
-		fileWrite("resources/" + fileName, m->GetMsg().c_str(), m->GetMsg().size(), true);
+		auto&& file_m = static_cast<const FileMessage*>(m);
+		auto&& ext = file_m->GetExtension();
+		auto&& file_data = file_m->GetMsg();
+		std::string fileName = createUniqueFileName(ext.c_str());
+		fileWrite("resources/" + fileName, file_data.c_str(), file_data.size(), true);
 		data_to_store = fileName;
+		msg = std::make_unique<FileMessage>(m->GetUsername(), "", ext, file_data);
 		break;
 	}
 	default:
@@ -290,10 +297,9 @@ void Server::handleAuthorizedMessage(const AuthorizedMessage* m)
 	m_data->push_back(std::make_pair<std::string, std::string>(m->GetUsername(), data_to_store.data())); // store it in the feed
 	fileAppend("resources\\STATE", m->GetUsername() + " " + data_to_store + "\r\n"); // store it in the file for subsequent runs
 	printf("\n--------------\n");
-	printf("send to all clients:\n");
-	// MessagePack msg_pack = convertSContToMsgPack();	
+	printf("send to all clients new message\n");
 	MessagePack msg_pack;
-	msg_pack.AddMsg(TextMessage(m->GetUsername(), std::string(), data_to_store.data()));
+	msg_pack.AddMsg(std::move(msg));
 	broadcast(msg_pack);
 }
 
@@ -362,8 +368,22 @@ MessagePack Server::convertSContToMsgPack() const
 	MessagePack msg_pack;
 	for (auto&& msg : *m_data)
 	{
-		printf("%s %s\n", msg.first.c_str(), msg.second.c_str());
-		msg_pack.AddMsg(TextMessage(msg.first, std::string(), msg.second));
+		auto&& user_name = msg.first;
+		auto&& message = msg.second;
+		printf("%s %s\n", user_name.c_str(), message.c_str());
+		std::unique_ptr<AuthorizedMessage> auth_m;
+		auto&& file_path = "resources/" + message;
+		if (fileExists(file_path))
+		{
+			File f(file_path);
+			auto ext = split(message, ".").back();
+			auth_m = std::make_unique<FileMessage>(user_name, "", "." + ext, f.GetData());
+		}
+		else 
+		{
+			auth_m = std::make_unique<TextMessage>(user_name, "", message);
+		}
+		msg_pack.AddMsg(std::move(auth_m));
 	}
 	return msg_pack;
 }

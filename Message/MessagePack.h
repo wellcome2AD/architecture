@@ -15,6 +15,7 @@ public:
 	virtual void Deserialize(Deserializer& d) override;
 	virtual void Serialize(Serializer& s) const override;
 	virtual void AddMsg(const IMessage& msg) override;
+	virtual void AddMsg(std::unique_ptr<IMessage>&& msg);
 	virtual const std::vector<std::unique_ptr<IMessage>>& GetMsgs() const override;
 
 private:

@@ -106,7 +106,7 @@ void Viewer::printMsgs() const
 		std::cout << std::string(14, '-') << std::endl;
 		std::cout << "MESSAGES:\n";
 		std::cout << std::string(14, '-') << std::endl;
-		for (auto&& msg : _msg_pack.get()->GetMsgs())
+		for (auto&& msg : _msg_pack->GetMsgs())
 		{
 			switch (msg->GetFormat())
 			{
@@ -119,10 +119,8 @@ void Viewer::printMsgs() const
 			case file:
 			{
 				auto&& file_msg = static_cast<const FileMessage&>(*msg);
-				auto&& file_name = createUniqueFileName(file_msg.GetExtension().c_str());
-				fileWrite(file_name, file_msg.GetMsg().data(), file_msg.GetMsg().size());
+				auto&& file_name = file_msg.GetMsg();
 				std::cout << file_msg.GetUsername() << " : " << file_name << std::endl;				
-				system(std::string("start " + file_name).c_str());
 				break;
 			}
 			default:
@@ -139,39 +137,48 @@ void Viewer::printMsgs() const
 	}
 }
 
+void Viewer::handleMessage(const IMessage& msg)
+{
+	switch (msg.GetFormat())
+	{
+	case text:
+	{
+		auto&& txt_msg = static_cast<const TextMessage&>(msg);
+		_msg_pack->AddMsg(txt_msg);
+		break;
+	}
+	case file:
+	{
+		auto&& file_msg = static_cast<const FileMessage&>(msg);
+		auto&& file_name = createUniqueFileName(file_msg.GetExtension().c_str());
+		fileWrite(file_name, file_msg.GetMsg().data(), file_msg.GetMsg().size());
+		system(std::string("start " + file_name).c_str());
+		// TODO хранить в FileMessage не расширение, а имя файла
+		_msg_pack->AddMsg(FileMessage(file_msg.GetUsername(), file_msg.GetPassword(), file_msg.GetExtension(), file_name));
+		break;
+	}
+	case msgPack:
+	{
+		auto&& pack_msg = static_cast<const MessagePack&>(msg);
+		for (auto&& m : pack_msg.GetMsgs())
+		{
+			handleMessage(*m);
+		}
+		break;
+	}
+	default:
+		assert(0);
+	}
+}
+
 void Viewer::Update(const Event& e)
 {
 	switch (e.GetEventType())
 	{
 	case messagesUpdate:
 	{
-		auto&& msgs = static_cast<const MessagesUpdateEvent&>(e).GetMsg();
-		switch (msgs.GetFormat())
-		{
-		case text:
-		{
-			auto&& txt_msg = static_cast<const TextMessage&>(msgs);
-			_msg_pack->AddMsg(txt_msg);
-			break;
-		}
-		case file:
-		{
-			auto&& file_msg = static_cast<const FileMessage&>(msgs);
-			_msg_pack->AddMsg(file_msg);
-			break;
-		}
-		case msgPack:
-		{
-			auto&& pack_msg = static_cast<const MessagePack&>(msgs);
-			for (auto&& m : pack_msg.GetMsgs())
-			{
-				_msg_pack->AddMsg(*m);
-			}
-			break;
-		}
-		default:
-			assert(0);
-		}
+		auto&& msg = static_cast<const MessagesUpdateEvent&>(e).GetMsg();
+		handleMessage(msg);
 		std::lock_guard<std::mutex> console_lg(_console_mutex);
 		m_console.clearScreen();
 		printf("Press ESC to type message\n");

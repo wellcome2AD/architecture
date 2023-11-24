@@ -19,6 +19,7 @@ private:
 	void tryToConnect();
 	void sendMsg(const std::string& username, const std::string& password, const std::string& msg);
 	void printMsgs() const;	
+	void handleMessage(const IMessage& m);
 	virtual void Update(const Event& e) override;
 
 private:

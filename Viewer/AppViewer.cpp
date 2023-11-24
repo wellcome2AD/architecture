@@ -10,91 +10,6 @@
 #include "../helpers/Socket/ConnResetException.h"
 #include "../helpers/UtilFile.h"
 
-Viewer::Viewer()
-{
-	_msg_pack = std::make_shared<MessagePack>();
-}
-
-void Viewer::printMenu()
-{
-	std::cout << std::string(10, '-') + '\n';
-	std::cout << "MENU:\n";
-	std::cout << "1. Send message\n";
-	std::cout << "2. Read messages\n";
-	std::cout << "3. Exit\n";
-	std::cout << std::string(10, '-') + '\n';
-	std::cout << "Input command: ";
-	int command;
-	std::cin >> command;
-	switch (command)
-	{
-	case 1:
-	{
-		std::cout << "Input username: ";
-		std::string username;
-		std::cin >> username;
-		std::cout << "Input password: ";
-		std::string password;
-		std::cin >> password;		
-		getchar();
-		std::cout << "Input message: ";
-		std::string message;
-		std::getline(std::cin, message);
-		sendMsg(username, password, message);
-		std::cout << std::endl;
-		printMenu();
-		return;
-		break;
-	}
-	case 2:
-	{
-		printMsgs();
-		std::cout << std::endl;
-		printMenu();
-		return;
-		break;
-	}
-	case 3:
-	{
-		exit(EXIT_SUCCESS);
-		is_connected.store(false);
-		break;
-	}
-	default:
-	{
-		std::cout << "Incorrect command: " << command << std::endl;
-		std::cout << std::endl;
-		printMenu();
-		break;
-	}
-	}
-}
-
-void Viewer::sendMsg(const std::string& username, const std::string& password, const std::string& msg)
-{
-	AuthorizedMessage* msg_to_send = nullptr;
-	format msg_format = fileExists(msg) ? file : text;
-	switch (msg_format) {
-	case text:
-	{
-		msg_to_send = new TextMessage(username, password, msg);
-		break;
-	}
-	case file:
-	{
-		auto dot_befor_ext = msg.find_last_of('.');
-		auto extension = msg.substr(dot_befor_ext);
-		auto file_data = readFromFile(msg);
-		msg_to_send = new FileMessage(username, password, extension, file_data);
-	}
-	default:
-		assert(0);
-		break;
-	}
-	_client.send(_url, msg_to_send);
-	delete[] msg_to_send;
-}
-
 void Viewer::Run()
 {
 	Viewer v;
@@ -122,21 +37,97 @@ void Viewer::Run()
 	thr.detach();
 
 	while (true)
-		v.printMenu();
+	{
+		if (v.m_console.isEscapePressed()) // pressing ESC activates typing mode
+		{
+			std::lock_guard<std::mutex> lg(v._console_mutex);
+			std::cout << "Input username: ";
+			std::string username;
+			std::cin >> username;
+			std::cout << "Input password: ";
+			std::string password;
+			std::cin >> password;
+			getchar();
+			std::cout << "Input message: ";
+			std::string message;
+			std::getline(std::cin, message);
+			v.sendMsg(username, password, message);
+			std::cout << std::endl;
+		}
+	}
+}
+
+Viewer::Viewer()
+{
+	_msg_pack = std::make_shared<MessagePack>();
+}
+
+void Viewer::tryToConnect()
+{
+	std::string ip("127.0.0.1:");
+	std::cout << "Input port to connect: " << ip;
+	std::string port;
+	std::cin >> port;
+	_url = ip + port;
+	is_connected.store(_client.connect(_url));
+}
+
+void Viewer::sendMsg(const std::string& username, const std::string& password, const std::string& msg)
+{
+	AuthorizedMessage* msg_to_send = nullptr;
+	format msg_format = fileExists(msg) ? file : text;
+	switch (msg_format) {
+	case text:
+	{
+		msg_to_send = new TextMessage(username, password, msg);
+		break;
+	}
+	case file:
+	{
+		auto dot_befor_ext = msg.find_last_of('.');
+		auto extension = msg.substr(dot_befor_ext);
+		auto file_data = readFromFile(msg);
+		msg_to_send = new FileMessage(username, password, extension, file_data);
+		break;
+	}
+	default:
+		assert(0);
+		break;
+	}
+	_client.send(_url, msg_to_send);
+	delete[] msg_to_send;
 }
 
 void Viewer::printMsgs() const
 {
-	if (_msg_pack.get() && _msg_pack.get()->GetMsgs().size() > 0)
+	assert(_msg_pack);
+	if (_msg_pack->GetMsgs().size() > 0)
 	{
-		std::lock_guard<std::mutex> lg(_msg_mutex);
 		std::cout << std::string(14, '-') << std::endl;
-		std::cout << "\nMESSAGES:\n";
+		std::cout << "MESSAGES:\n";
 		std::cout << std::string(14, '-') << std::endl;
 		for (auto&& msg : _msg_pack.get()->GetMsgs())
 		{
-			auto&& text_msg = dynamic_cast<const TextMessage&>(*msg);
-			std::cout << text_msg.GetUsername() << " : " << text_msg.GetMsg() << std::endl;
+			switch (msg->GetFormat())
+			{
+			case text:
+			{
+				auto&& text_msg = static_cast<const TextMessage&>(*msg);
+				std::cout << text_msg.GetUsername() << " : " << text_msg.GetMsg() << std::endl;
+				break;
+			}
+			case file:
+			{
+				auto&& file_msg = static_cast<const FileMessage&>(*msg);
+				auto&& file_name = createUniqueFileName(file_msg.GetExtension().c_str());
+				fileWrite(file_name, file_msg.GetMsg().data(), file_msg.GetMsg().size());
+				std::cout << file_msg.GetUsername() << " : " << file_name << std::endl;				
+				system(std::string("start " + file_name).c_str());
+				break;
+			}
+			default:
+				assert(0);
+			}
 		}
 		std::cout << std::string(14, '-') << std::endl;
 	}
@@ -154,26 +145,38 @@ void Viewer::Update(const Event& e)
 	{
 	case messagesUpdate:
 	{
-		std::lock_guard<std::mutex> lg(_msg_mutex);
-		auto &&msgs = static_cast<const MessagesUpdateEvent&>(e).GetMsg();
+		auto&& msgs = static_cast<const MessagesUpdateEvent&>(e).GetMsg();
 		switch (msgs.GetFormat())
 		{
-			case text:
-			{
-				auto &&txt_msg = static_cast<const TextMessage&>(msgs);
-				_msg_pack->AddMsg(txt_msg);
-				break;
-			}
-			case msgPack:
-			{
-				auto&& pack_msg = static_cast<const MessagePack&>(msgs);
-				for(auto &&m : pack_msg.GetMsgs())
-				{
-					_msg_pack->AddMsg(*m);
-				}
-				break;
-			}
+		case text:
+		{
+			auto&& txt_msg = static_cast<const TextMessage&>(msgs);
+			_msg_pack->AddMsg(txt_msg);
+			break;
 		}
+		case file:
+		{
+			auto&& file_msg = static_cast<const FileMessage&>(msgs);
+			_msg_pack->AddMsg(file_msg);
+			break;
+		}
+		case msgPack:
+		{
+			auto&& pack_msg = static_cast<const MessagePack&>(msgs);
+			for (auto&& m : pack_msg.GetMsgs())
+			{
+				_msg_pack->AddMsg(*m);
+			}
+			break;
+		}
+		default:
+			assert(0);
+		}
+		std::lock_guard<std::mutex> console_lg(_console_mutex);
+		m_console.clearScreen();
+		printf("Press ESC to type message\n");
+		printMsgs();		
+		printf("----------\nPress ESC to type message\n");		
 		break;
 	}
 	case connReset:
@@ -187,14 +190,4 @@ void Viewer::Update(const Event& e)
 		assert(0);
 		break;
 	}
-}
-
-void Viewer::tryToConnect()
-{
-	std::string ip("127.0.0.1:");
-	std::cout << "Input port to connect: " << ip;
-	std::string port;
-	std::cin >> port;
-	_url = ip + port;
-	is_connected.store(_client.connect(_url));
 }

@@ -148,6 +148,8 @@
     <ClInclude Include="..\Message\MessagePack.h" />
     <ClInclude Include="..\Message\RequestMessage.h" />
     <ClInclude Include="..\Message\TextMessage.h" />
+    <ClInclude Include="..\Monitor\helpers\Console.h" />
+    <ClInclude Include="..\Monitor\helpers\Process.h" />
     <ClInclude Include="..\Observer\ConnResetEvent.h" />
     <ClInclude Include="..\Observer\Event.h" />
     <ClInclude Include="..\Observer\IObservable.h" />
@@ -170,6 +172,8 @@
     <ClCompile Include="..\Message\MessagePack.cpp" />
     <ClCompile Include="..\Message\RequestMessage.cpp" />
     <ClCompile Include="..\Message\TextMessage.cpp" />
+    <ClCompile Include="..\Monitor\helpers\Console.cpp" />
+    <ClCompile Include="..\Monitor\helpers\Process.cpp" />
     <ClCompile Include="..\Observer\ConnResetEvent.cpp" />
     <ClCompile Include="..\Observer\IObservable.cpp" />
     <ClCompile Include="..\Observer\MessagesUpdateEvent.cpp" />

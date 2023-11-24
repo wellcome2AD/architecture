@@ -34,6 +34,11 @@ void MessagePack::AddMsg(const IMessage& msg)
     _msgs.push_back(std::unique_ptr<IMessage>(msg.Clone()));
 }
 
+void MessagePack::AddMsg(std::unique_ptr<IMessage>&& msg)
+{
+    _msgs.push_back(std::move(msg));
+}
+
 const std::vector<std::unique_ptr<IMessage>>& MessagePack::GetMsgs() const
 {
     return _msgs;

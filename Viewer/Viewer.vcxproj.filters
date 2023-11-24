@@ -111,6 +111,12 @@
     <ClInclude Include="..\Observer\ConnResetEvent.h">
       <Filter>observer</Filter>
     </ClInclude>
+    <ClInclude Include="..\Monitor\helpers\Console.h">
+      <Filter>helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Monitor\helpers\Process.h">
+      <Filter>helpers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AppViewer.cpp">
@@ -163,6 +169,12 @@
     </ClCompile>
     <ClCompile Include="..\Observer\ConnResetEvent.cpp">
       <Filter>observer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Monitor\helpers\Console.cpp">
+      <Filter>helpers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Monitor\helpers\Process.cpp">
+      <Filter>helpers</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

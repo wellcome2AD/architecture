@@ -2,7 +2,7 @@
 
 #include <string>
 
-#include "../Server/ResponseBuilder/IConvertableToHttp.h"
+#include "../ResponseBuilder/IConvertableToHttp.h"
 
 class File : public IConvertableToHttp
 {

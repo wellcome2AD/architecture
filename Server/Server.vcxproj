@@ -147,13 +147,13 @@
     <ClCompile Include="..\Observer\ConnResetEvent.cpp" />
     <ClCompile Include="..\Observer\IObservable.cpp" />
     <ClCompile Include="..\Observer\MessagesUpdateEvent.cpp" />
+    <ClCompile Include="..\ResponseBuilder\ResponseBuilder.cpp" />
+    <ClCompile Include="..\ResponseBuilder\ServerContent.cpp" />
     <ClCompile Include="..\Serializer\SocketSerializer.cpp" />
     <ClCompile Include="AppServer.cpp" />
     <ClCompile Include="AppServerMain.cpp" />
     <ClCompile Include="ClientConnection\ClientConnection.cpp" />
     <ClCompile Include="helpers\SocketServer.cpp" />
-    <ClCompile Include="ResponseBuilder\ResponseBuilder.cpp" />
-    <ClCompile Include="ResponseBuilder\ServerContent.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Deserializer\Deserializer.h" />
@@ -177,15 +177,15 @@
     <ClInclude Include="..\Observer\IObservable.h" />
     <ClInclude Include="..\Observer\IObserver.h" />
     <ClInclude Include="..\Observer\MessagesUpdateEvent.h" />
+    <ClInclude Include="..\ResponseBuilder\IConvertableToHttp.h" />
+    <ClInclude Include="..\ResponseBuilder\ResponseBuilder.h" />
+    <ClInclude Include="..\ResponseBuilder\ServerContent.h" />
     <ClInclude Include="..\Serializer\Serializer.h" />
     <ClInclude Include="..\Serializer\SerializerOperators.h" />
     <ClInclude Include="..\Serializer\SocketSerializer.h" />
     <ClInclude Include="AppServer.h" />
     <ClInclude Include="ClientConnection\ClientConnection.h" />
     <ClInclude Include="helpers\SocketServer.h" />
-    <ClInclude Include="ResponseBuilder\IConvertableToHttp.h" />
-    <ClInclude Include="ResponseBuilder\ResponseBuilder.h" />
-    <ClInclude Include="ResponseBuilder\ServerContent.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

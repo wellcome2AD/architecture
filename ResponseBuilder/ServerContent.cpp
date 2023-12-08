@@ -1,5 +1,5 @@
 #include "ServerContent.h"
-#include "../../helpers/UtilFile.h"
+#include "../helpers/UtilFile.h"
 
 std::string ServerContent::GetHttp() const
 {

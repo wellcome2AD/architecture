@@ -7,7 +7,7 @@
 #include <map>
 
 #include "helpers/SocketServer.h"
-#include "ResponseBuilder/ServerContent.h"
+#include "../ResponseBuilder/ServerContent.h"
 #include "../Message/AuthorizedMessage.h"
 #include "../Message/RequestMessage.h"
 #include "ClientConnection/ClientConnection.h"

@@ -21,10 +21,11 @@
 #include "../Message/RequestMessage.h"
 #include "../Message/MessagePack.h"
 #include "../helpers/File.h"
-#include "ResponseBuilder/ResponseBuilder.h"
+#include "../ResponseBuilder/IConvertableToHttp.h"
 #include "../Observer/MessagesUpdateEvent.h"
 #include "../Observer/ConnResetEvent.h"
 #include "../helpers/Socket/ConnResetException.h"
+#include "../ResponseBuilder/ResponseBuilder.h"
 
 Server::~Server()
 {
@@ -376,7 +377,7 @@ MessagePack Server::convertSContToMsgPack() const
 		if (fileExists(file_path))
 		{
 			File f(file_path);
-			auto ext = split(message, ".").back();
+			auto &&ext = split(message, ".").back();
 			auth_m = std::make_unique<FileMessage>(user_name, "", "." + ext, f.GetData());
 		}
 		else 

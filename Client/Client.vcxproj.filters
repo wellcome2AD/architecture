@@ -10,9 +10,6 @@
     <ClCompile Include="AppClient.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
-    <ClCompile Include="AppClientMain.cpp">
-      <Filter>Исходные файлы</Filter>
-    </ClCompile>
     <ClCompile Include="..\Message\MessagePack.cpp">
       <Filter>message</Filter>
     </ClCompile>
@@ -48,6 +45,9 @@
     </ClCompile>
     <ClCompile Include="..\Observer\ConnResetEvent.cpp">
       <Filter>observer</Filter>
+    </ClCompile>
+    <ClCompile Include="AppClientMain.cpp">
+      <Filter>Исходные файлы</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
